@@ -6,20 +6,19 @@ from Bot.Cogs.QuoteManager import QuoteManager
 from Bot.Cogs.QuoteCommands import QuoteCommands
 from Bot.Cogs.AssignColour import AssignColour
 from Bot.Cogs.BasicCommands import BasicCommands
+from Database import DatabaseHandler
 
 Config.LoadConfig()
 print(Config.config)
-from Database import DatabaseHandler
+
 
 intents = nextcord.Intents.all()
 intents.members = True
 bot = commands.Bot(intents=intents)
 
-data_handle = DatabaseHandler.DatabaseHandler(dir_path)
-bot = commands.Bot(intents=intents,default_guild_ids=Config.config.get("guildids"))
-
 dir_path = os.path.realpath("BotDB.db")
 data_handle = DatabaseHandler.DatabaseHandler(dir_path)
+bot = commands.Bot(intents=intents,default_guild_ids=Config.config.get("guildids"))
 
 testserverid = 554737777049206794
 
@@ -28,9 +27,11 @@ async def on_ready():
     print("ready")
     bot.add_cog(QuoteCommands(bot, data_handle))
     bot.add_cog(AssignColour(bot))
+    bot.add_cog(QuoteManager(bot))
+    bot.add_cog(BasicCommands(bot))
+    bot.add_all_cog_commands()
+    await bot.sync_all_application_commands()
 
-
-Config.LoadConfig()
 
 # Uses environmental variable to get token then displays errors upon bot run
 try:
