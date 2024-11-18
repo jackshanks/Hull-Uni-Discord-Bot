@@ -15,6 +15,6 @@ class BasicCommands(commands.Cog):
         return await ctx.response.send_message(f'Pong! {round(ctx.client.latency * 1000)} ms')
 
     @nextcord.slash_command(name="help", description="Get help with bot commands", guild_ids=[testserverid])
-    async def ping(self, ctx):
+    async def help(self, ctx):
         return await ctx.response.send_message(
             'https://docs.google.com/document/d/1UtepVatMgyV7riBK9gXyhrvnkCMSEVjm94jsOq3Lzek/edit?usp=sharing')
