@@ -8,6 +8,9 @@ quotechannels:
   - 1173986403902836700
   - 1303662464793317400
   - 554737777049206800
-starquotechannel: 123
-starratio: 5
-deleteratio: 5
+starquotechannel: 
+  - 123
+starratio: 
+  - 5
+deleteratio: 
+  - 5
