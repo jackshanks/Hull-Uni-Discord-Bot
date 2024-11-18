@@ -4,6 +4,13 @@ from Config.ConfigLoader import Config
 from nextcord.ext import commands
 from Bot.Cogs.QuoteCommands import QuoteCommands
 from Bot.Cogs.AssignColour import AssignColour
+<<<<<<< HEAD
+=======
+from Bot.Cogs.BasicCommands import BasicCommands
+
+Config.LoadConfig()
+print(Config.config)
+>>>>>>> ee4395f (update merge conflict resolution)
 from Database import DatabaseHandler
 
 intents = nextcord.Intents.all()

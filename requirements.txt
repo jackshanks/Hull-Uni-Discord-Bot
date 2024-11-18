@@ -1,2 +1,6 @@
+nextcord[voice]
+setuptools
+pyyaml
 nextcord~=2.6.0
 aiosqlite~=0.20.0
+emoji
