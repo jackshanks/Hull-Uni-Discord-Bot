@@ -24,13 +24,13 @@ testserverid = 554737777049206794
 
 @bot.event
 async def on_ready():
-    print("ready")
     bot.add_cog(QuoteCommands(bot, data_handle))
     bot.add_cog(AssignColour(bot))
     bot.add_cog(QuoteManager(bot))
     bot.add_cog(BasicCommands(bot))
     bot.add_all_cog_commands()
-    await bot.sync_all_application_commands()
+    await bot.sync_application_commands()
+    print("ready")
 
 
 # Uses environmental variable to get token then displays errors upon bot run

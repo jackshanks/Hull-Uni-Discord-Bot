@@ -7,17 +7,15 @@ from Config import ConfigLoader
 class AssignColour(commands.Cog):
     def __init__(self, client):
         self.client = client
-    
-    testserverid = 554737777049206794
 
-    @nextcord.slash_command(name = "assign-colour",description = "Assign yourself a colour",guild_ids=[testserverid])
+    @nextcord.slash_command(name = "assign-colour",description = "Assign yourself a colour",guild_ids=[ConfigLoader.Config.config.get("guildids")])
     async def test(self,interaction : Interaction):
         for i in interaction.user.roles:
             if i.id in ConfigLoader.Config.config.get('colour'):
                 await interaction.user.remove_roles(i)
-        await interaction.response.send_message("Select your new colour",view=DropdownView(interaction))
+        await interaction.response.send_message("Select new colour",view=DropdownView(interaction))
     
-    @nextcord.slash_command(name = "remove-colour",description = "Go back to your default colour",guild_ids=[testserverid])
+    @nextcord.slash_command(name = "remove-colour",description = "Go back to your default colour",guild_ids=[ConfigLoader.Config.config.get("guildids")])
     async def RemoveAllColour(self,interaction : Interaction):
         for i in interaction.user.roles:
             if i.id in ConfigLoader.Config.config.get('colour'):
