@@ -2,19 +2,23 @@ import nextcord
 import os
 from Config.ConfigLoader import Config
 from nextcord.ext import commands
-from Bot.Cogs.QuoteManager import QuoteManager
+from Bot.Cogs.QuoteCommands import QuoteCommands
 from Bot.Cogs.AssignColour import AssignColour
+from Database import DatabaseHandler
 
 intents = nextcord.Intents.all()
 intents.members = True
 bot = commands.Bot(intents=intents)
+
+dir_path = os.path.realpath("BotDB.db")
+data_handle = DatabaseHandler.DatabaseHandler(dir_path)
 
 testserverid = 554737777049206794
 
 @bot.event
 async def on_ready():
     print("ready")
-    bot.add_cog(QuoteManager(bot))
+    bot.add_cog(QuoteCommands(bot, data_handle))
     bot.add_cog(AssignColour(bot))
 
 
