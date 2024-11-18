@@ -3,19 +3,19 @@ from nextcord import Interaction
 import nextcord
 from Config import ConfigLoader
 
-
+testserverid = 554737777049206794
 class AssignColour(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
-    @nextcord.slash_command(name = "assign-colour",description = "Assign yourself a colour",guild_ids=[ConfigLoader.Config.config.get("guildids")])
+    @nextcord.slash_command(name = "assign-colour",description = "Assign yourself a colour",guild_ids=[testserverid])#ConfigLoader.Config.config.get("guildids")])
     async def test(self,interaction : Interaction):
         for i in interaction.user.roles:
             if i.id in ConfigLoader.Config.config.get('colour'):
                 await interaction.user.remove_roles(i)
         await interaction.response.send_message("Select new colour",view=DropdownView(interaction))
     
-    @nextcord.slash_command(name = "remove-colour",description = "Go back to your default colour",guild_ids=[ConfigLoader.Config.config.get("guildids")])
+    @nextcord.slash_command(name = "remove-colour",description = "Go back to your default colour",guild_ids=[testserverid])#ConfigLoader.Config.config.get("guildids")])
     async def RemoveAllColour(self,interaction : Interaction):
         for i in interaction.user.roles:
             if i.id in ConfigLoader.Config.config.get('colour'):
@@ -32,7 +32,6 @@ class ColourDropdown(nextcord.ui.Select):
     def __init__(self, interaction : Interaction = None):
         select_options = []
         for i in ConfigLoader.Config.config.get('colour'):
-            print(i)
             try:
                 role = interaction.guild.get_role(i)
                 select_options.append(nextcord.SelectOption(label=role.name,description=str(role.colour)))

@@ -18,9 +18,8 @@ bot = commands.Bot(intents=intents)
 
 dir_path = os.path.realpath("BotDB.db")
 data_handle = DatabaseHandler.DatabaseHandler(dir_path)
-bot = commands.Bot(intents=intents,default_guild_ids=Config.config.get("guildids"))
+bot = commands.Bot(intents=intents)
 
-testserverid = 554737777049206794
 
 @bot.event
 async def on_ready():
@@ -29,7 +28,7 @@ async def on_ready():
     bot.add_cog(QuoteManager(bot))
     bot.add_cog(BasicCommands(bot))
     bot.add_all_cog_commands()
-    await bot.sync_application_commands()
+    await bot.sync_all_application_commands()
     print("ready")
 
 

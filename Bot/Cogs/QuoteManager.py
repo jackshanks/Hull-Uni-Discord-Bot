@@ -27,6 +27,6 @@ class QuoteManager(commands.Cog):
         if down <1:
             down = 1
         if up > down * ConfigLoader.Config.config["starratio"]:
-            pass
+            print("star")
         if down > up *ConfigLoader.Config.config["deleteratio"]:
-            pass
+            print("delete")
