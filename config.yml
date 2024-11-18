@@ -11,3 +11,5 @@ quotechannels:
   - 554737777049206796
 starquotechannel:
   - 
+starratio = 5
+deleteratio = 5
