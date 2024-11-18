@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+--- # most finicky file type ever, if you press tab the bot crashes, DO NOT USE TABS
+>>>>>>> edf00b4 (Update config.yml)
 guildids:
   - 554737777049206794
 
