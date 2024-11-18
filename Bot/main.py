@@ -6,7 +6,7 @@ from Cogs.AssignColour import AssignColour
 
 BOT_TOKEN = ''
 
-intents = discord.Intents.default()
+intents = discord.Intents.All()
 intents.message_content = True
 
 bot = commands.Bot(intents=intents)
