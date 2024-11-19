@@ -1,10 +1,12 @@
+import os
+
 import aiosqlite
 import random
 
 
 class DatabaseHandler:
-    def __init__(self, database_path):
-        self.database_path = database_path
+    def __init__(self):
+        self.database_path = os.path.join(os.path.dirname(os.path.abspath("BotDB.db")), "Database\BotDB.db")
         self._connection: aiosqlite.Connection = None
 
     async def connect(self) -> None:
@@ -13,7 +15,6 @@ class DatabaseHandler:
             self._connection = await aiosqlite.connect(self.database_path)
             # Enable returning dictionaries instead of tuples for query results
             self._connection.row_factory = aiosqlite.Row
-            print("Database connection established successfully")
         except Exception as e:
             print(f"Failed to connect to database: {str(e)}")
             raise
@@ -23,7 +24,6 @@ class DatabaseHandler:
         if self._connection:
             await self._connection.close()
             self._connection = None
-            print("Database connection closed")
 
     async def execute_query(self, query: str, *args):
         """Execute a database query."""
@@ -32,7 +32,7 @@ class DatabaseHandler:
             raise Exception("Database connection not initialized")
 
         try:
-            async with self._connection.execute(query, args) as cursor:
+            async with await self._connection.execute(query, args) as cursor:
                 row = await cursor.fetchone()
                 return tuple(row) if row else None
         except Exception as e:

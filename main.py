@@ -11,19 +11,13 @@ from Database import DatabaseHandler
 Config.LoadConfig()
 print(Config.config)
 
-
 intents = nextcord.Intents.all()
-intents.members = True
-bot = commands.Bot(intents=intents)
-
-dir_path = os.path.realpath("BotDB.db")
-data_handle = DatabaseHandler.DatabaseHandler(dir_path)
 bot = commands.Bot(intents=intents)
 
 
 @bot.event
 async def on_ready():
-    bot.add_cog(QuoteCommands(bot, data_handle))
+    bot.add_cog(QuoteCommands(bot))
     bot.add_cog(AssignColour(bot))
     bot.add_cog(QuoteManager(bot))
     bot.add_cog(BasicCommands(bot))
@@ -34,6 +28,7 @@ async def on_ready():
 
 # Uses environmental variable to get token then displays errors upon bot run
 try:
+    print(os.getenv("auth"))
     token = os.getenv("auth")
     bot.run(token)
 except nextcord.HTTPException as e:
