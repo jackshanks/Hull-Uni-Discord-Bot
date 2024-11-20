@@ -50,3 +50,9 @@ class DatabaseHandler:
         """Get number of quotes in the quote table."""
         result = await self.execute_query("SELECT COUNT(*) FROM quotes")
         return result[0]
+
+    async def mark_quote_as_star():
+        pass
+    
+    async def mark_quote_as_deleted():
+        pass
