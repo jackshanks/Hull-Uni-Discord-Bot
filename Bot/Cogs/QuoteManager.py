@@ -3,6 +3,8 @@ import nextcord
 from Config import ConfigLoader
 import json
 import emoji
+import Database
+import Database.DatabaseHandler
 
 class QuoteManager(commands.Cog):
     def __init__(self, bot : commands.Bot):
@@ -31,8 +33,14 @@ class QuoteManager(commands.Cog):
             e = nextcord.Embed(description=message.content)
             if message.mentions.count() > 0:
                 e.set_author(name=message.mentions[0].name)
+            x = Database.DatabaseHandler.DatabaseHandler()
+            x.connect()
+            x.mark_quote_as_star(payload.message_id)
             starchan.send(embed=e)
         if down > up *ConfigLoader.Config.config["deleteratio"]:
             delchan = self.bot.get_channel(ConfigLoader.Config.config["deletechannel"])
             delchan.send(message.content + f" - quoted by {message.author}")
+            x = Database.DatabaseHandler.DatabaseHandler()
+            x.connect()
+            x.mark_quote_as_deleted(payload.message_id)
             message.delete()
