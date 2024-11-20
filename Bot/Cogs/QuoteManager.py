@@ -27,6 +27,12 @@ class QuoteManager(commands.Cog):
         if down <1:
             down = 1
         if up > down * ConfigLoader.Config.config["starratio"]:
-            print("star")
+            starchan = self.bot.get_channel(ConfigLoader.Config.config["starquotechannel"])
+            e = nextcord.Embed(description=message.content)
+            if message.mentions.count() > 0:
+                e.set_author(name=message.mentions[0].name)
+            starchan.send(embed=e)
         if down > up *ConfigLoader.Config.config["deleteratio"]:
-            print("delete")
+            delchan = self.bot.get_channel(ConfigLoader.Config.config["deletechannel"])
+            delchan.send(message.content + f" - quoted by {message.author}")
+            message.delete()
