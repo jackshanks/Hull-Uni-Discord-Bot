@@ -53,3 +53,6 @@ class DatabaseHandler:
     
     async def mark_quote_as_deleted(self,id):
         pass
+
+    async def get_quote_starred(self,id):
+        pass
