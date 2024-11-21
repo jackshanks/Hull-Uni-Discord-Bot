@@ -1,6 +1,4 @@
 --- # most finicky file type ever, if you press tab the bot crashes, DO NOT USE TABS
-guildids:
-  - 554737777049206794 #test server
 colour:
   - 1308119278284967976
   - 1308119307951280239
