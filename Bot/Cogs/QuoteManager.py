@@ -28,17 +28,17 @@ class QuoteManager(BaseCog):
         if down < 1:
             down = 1
 
-        if up >= down * ConfigLoader.Config.config["starratio"]:
+        if up >= down * Config.config["starratio"]:
             y = await self.db.get_quote_starred(payload.message_id)
             if y:
                 await self.db.mark_quote_as_star(payload.message_id)
-            starchan = self.client.get_channel(ConfigLoader.Config.config["starquotechannel"])
+            starchan = self.client.get_channel(Config.config["starquotechannel"])
             e = nextcord.Embed(description=message.content)
             if len(message.mentions) > 0:
                 e.set_author(name=message.mentions[0].name)
             await starchan.send("", embed=e)
 
-        if down > up * ConfigLoader.Config.config["deleteratio"]:
+        if down > up * Config.config["deleteratio"]:
             e = nextcord.Embed(description=message.content)
             e.set_author(name=f"{message.author.name}({message.author.id})")
             delchan = self.client.get_channel(Config().config["deletechannel"])
