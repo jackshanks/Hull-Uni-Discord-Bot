@@ -5,14 +5,14 @@ from Config import ConfigLoader
 
 
 class BasicCommands(commands.Cog):
-    def __init__(self, client):
-        self.client = client
+    def __init__(self, bot):
+        self.bot = bot
 
     testserverid = 554737777049206794
 
     @nextcord.slash_command(name="ping", description="Find out the response time of the bot", guild_ids=[testserverid])
     async def ping(self, ctx):
-        return await ctx.response.send_message(f'Pong! {round(ctx.client.latency * 1000)} ms')
+        return await ctx.response.send_message(f'Pong! {round(ctx.bot.latency * 1000)} ms')
 
     @nextcord.slash_command(name="help", description="Get help with bot commands", guild_ids=[testserverid])
     async def help(self, ctx):

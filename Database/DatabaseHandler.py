@@ -5,9 +5,14 @@ import random
 
 
 class DatabaseHandler:
-    def __init__(self):
-        self.database_path = os.path.join(os.path.dirname(os.path.abspath("BotDB.db")), "Database\BotDB.db")
-        self._connection: aiosqlite.Connection = None
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(DatabaseHandler, cls).__new__(cls)
+            cls._instance.database_path = os.path.join(os.path.dirname(os.path.abspath("BotDB.db")), "Database/BotDB.db")
+            cls._instance._connection = None
+        return cls._instance
 
     async def connect(self) -> None:
         """Initialize the database connection."""
@@ -41,7 +46,7 @@ class DatabaseHandler:
 
     async def get_quote(self):
         """Get a random quote."""
-        return await self.execute_query("SELECT * FROM quotes ORDER BY RAND() LIMIT 1")
+        return await self.execute_query("SELECT * FROM quotes ORDER BY RANDOM() LIMIT 1")
 
     async def get_number_of_quotes(self):
         """Get number of quotes in the quote table."""
