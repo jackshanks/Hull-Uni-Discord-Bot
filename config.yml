@@ -1,13 +1,13 @@
 --- # most finicky file type ever, if you press tab the bot crashes, DO NOT USE TABS
-guildids:
-  - 554737777049206794 #test server
 colour:
   - 1308119278284967976
   - 1308119307951280239
 quotechannels:
   - 554737777049206796 #testing
-  - 1303662464793317376 #jinvithoughts
   - 1173986403902836806 #quotes
+guild_ids:
+  - 554737777049206794  # Test Server
+  - 1153315295306465381 # Hull Uni
 starquotechannel: 554737777049206796
 deletechannel: 554737777049206796
 starratio: 1

@@ -1,19 +1,17 @@
 from nextcord.ext import commands
 import nextcord
-from Config import ConfigLoader
+
+from Bot.Cogs._BaseCog import BaseCog
+from Config.ConfigLoader import Config
 import json
 import emoji
 import Database.DatabaseHandler
 import re
 
-class QuoteManager(commands.Cog):
-    def __init__(self, bot: commands.Bot, db : Database.DatabaseHandler.DatabaseHandler):
-        self.bot = bot
-        self.db = db
-
+class QuoteManager(BaseCog):
     @commands.Cog.listener(name="on_raw_reaction_add")
     async def on_reaction(self, payload: nextcord.RawReactionActionEvent):
-        if not payload.channel_id in ConfigLoader.Config.config.get("quotechannels"):
+        if not payload.channel_id in Config().config.get("quotechannels"):
             return
         channel = self.bot.get_channel(payload.channel_id)
         message = await channel.fetch_message(payload.message_id)
@@ -43,7 +41,7 @@ class QuoteManager(commands.Cog):
         if down > up * ConfigLoader.Config.config["deleteratio"]:
             e = nextcord.Embed(description=message.content)
             e.set_author(name=f"{message.author.name}({message.author.id})")
-            delchan = self.client.get_channel(ConfigLoader.Config.config["deletechannel"])
+            delchan = self.client.get_channel(Config().config["deletechannel"])
             await delchan.send("", embed=e)
             await self.db.mark_quote_as_deleted(payload.message_id)
             await message.delete()

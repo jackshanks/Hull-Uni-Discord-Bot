@@ -9,8 +9,8 @@ from Bot.Cogs.BasicCommands import BasicCommands
 from Bot.Cogs.Config import ConfigCommands
 from Database import DatabaseHandler
 
-Config.LoadConfig()
-print(Config.config)
+Config()
+print(Config.guild_ids)
 
 intents = nextcord.Intents.all()
 bot = commands.Bot(intents=intents)
@@ -20,7 +20,6 @@ db = DatabaseHandler.DatabaseHandler()
 
 @bot.event
 async def on_ready():
-    await db.connect()
     bot.add_cog(QuoteCommands(bot, db))
     bot.add_cog(AssignColour(bot))
     bot.add_cog(QuoteManager(bot, db))
