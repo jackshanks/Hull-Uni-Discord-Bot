@@ -36,22 +36,43 @@ class DatabaseHandler:
         if not self._connection:
             raise Exception("Database connection not initialized")
 
+        await self.connect()
+
         try:
             async with await self._connection.execute(query, args) as cursor:
                 row = await cursor.fetchone()
                 return tuple(row) if row else None
         except Exception as e:
             print(f"Query execution failed: {str(e)}\nQuery: {query}")
+            await self.close()
             raise
+        finally:
+            await self._connection.close()
 
     async def get_quote(self):
         """Get a random quote."""
-        return await self.execute_query("SELECT * FROM quotes ORDER BY RANDOM() LIMIT 1")
+        try:
+            await self.connect()
+            return await self.execute_query("SELECT * FROM quotes ORDER BY RANDOM() LIMIT 1")
+        except Exception as e:
+            print(f"Get quote failed failed: {str(e)}")
+            await self.close()
+            raise
+        finally:
+            await self.close()
 
     async def get_number_of_quotes(self):
         """Get number of quotes in the quote table."""
-        result = await self.execute_query("SELECT COUNT(*) FROM quotes")
-        return result[0]
+        try:
+            await self.connect()
+            result = await self.execute_query("SELECT COUNT(*) FROM quotes")
+            return result[0]
+        except Exception as e:
+            print(f"Get number of quotes failed: {str(e)}")
+            await self.close()
+            raise
+        finally:
+            await self.close()
 
     async def mark_quote_as_star(self,id):
         pass
