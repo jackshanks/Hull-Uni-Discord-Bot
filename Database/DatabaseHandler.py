@@ -10,7 +10,8 @@ class DatabaseHandler:
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(DatabaseHandler, cls).__new__(cls)
-            cls._instance.database_path = os.path.join(os.path.dirname(os.path.abspath("BotDB.db")), "Database/BotDB.db")
+            cls._instance.database_path = os.path.join(os.path.dirname(os.path.abspath("BotDB.db")),
+                                                       "Database/BotDB.db")
             cls._instance._connection = None
         return cls._instance
 
@@ -74,14 +75,27 @@ class DatabaseHandler:
         finally:
             await self.close()
 
-    async def mark_quote_as_star(self,id):
-        pass
-    
-    async def mark_quote_as_deleted(self,id):
+    async def mark_quote_as_star(self, id):
         pass
 
-    async def get_quote_starred(self,id):
+    async def mark_quote_as_deleted(self, id):
         pass
 
-    async def submit_quote(self,id,content,said_by,quoted_by):
+    async def get_quote_starred(self, id):
+        try:
+            await self.connect()
+            result = await self.execute_query("SELECT star FROM quotes WHERE id = %s", id)
+            if result == 0:
+                return False
+            elif result == 1:
+                return True
+            else:
+                return None
+        except Exception as e:
+            print(f"Get quote star status failed: {str(e)}")
+            raise
+        finally:
+            await self.close()
+
+    async def submit_quote(self, id, content, said_by, quoted_by):
         pass
