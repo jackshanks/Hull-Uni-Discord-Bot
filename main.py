@@ -6,6 +6,7 @@ from Bot.Cogs.QuoteManager import QuoteManager
 from Bot.Cogs.QuoteCommands import QuoteCommands
 from Bot.Cogs.AssignColour import AssignColour
 from Bot.Cogs.BasicCommands import BasicCommands
+from Bot.Cogs.Config import ConfigCommands
 from Database import DatabaseHandler
 
 Config.LoadConfig()
@@ -21,6 +22,7 @@ async def on_ready():
     bot.add_cog(AssignColour(bot))
     bot.add_cog(QuoteManager(bot))
     bot.add_cog(BasicCommands(bot))
+    bot.add_cog(ConfigCommands(bot))
     bot.add_all_cog_commands()
     await bot.sync_all_application_commands()
     print("ready")

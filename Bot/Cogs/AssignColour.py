@@ -13,7 +13,7 @@ class AssignColour(commands.Cog):
         for i in interaction.user.roles:
             if i.id in ConfigLoader.Config.config.get('colour'):
                 await interaction.user.remove_roles(i)
-        await interaction.response.send_message("Select new colour",view=DropdownView(interaction))
+        await interaction.response.send_message("Select new colour",view=DropdownView(interaction),ephemeral=True)
     
     @nextcord.slash_command(name = "remove-colour",description = "Go back to your default colour",guild_ids=[testserverid])#ConfigLoader.Config.config.get("guildids")])
     async def RemoveAllColour(self,interaction : Interaction):
@@ -42,4 +42,3 @@ class ColourDropdown(nextcord.ui.Select):
     async def callback(self, interaction: Interaction) -> None:
         role = nextcord.utils.get(interaction.guild.roles,name=self.values[0])
         await interaction.user.add_roles(role)
-        await interaction.message.delete()
