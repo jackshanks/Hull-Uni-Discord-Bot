@@ -9,8 +9,8 @@ from Bot.Cogs.BasicCommands import BasicCommands
 from Bot.Cogs.Config import ConfigCommands
 from Database import DatabaseHandler
 
-Config.LoadConfig()
-print(Config.config)
+Config()
+print(Config.guild_ids)
 
 intents = nextcord.Intents.all()
 bot = commands.Bot(intents=intents)

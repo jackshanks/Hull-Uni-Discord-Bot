@@ -5,6 +5,9 @@ colour:
 quotechannels:
   - 554737777049206796 #testing
   - 1173986403902836806 #quotes
+guild_ids:
+  - 554737777049206794  # Test Server
+  - 1153315295306465381 # Hull Uni
 starquotechannel: 554737777049206796
 deletechannel: 554737777049206796
 starratio: 1
