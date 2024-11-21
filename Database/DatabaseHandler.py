@@ -82,3 +82,6 @@ class DatabaseHandler:
 
     async def get_quote_starred(self,id):
         pass
+
+    async def submit_quote(self,id,content,said_by,quoted_by):
+        pass
