@@ -20,7 +20,6 @@ db = DatabaseHandler.DatabaseHandler()
 
 @bot.event
 async def on_ready():
-    await db.connect()
     bot.add_cog(QuoteCommands(bot, db))
     bot.add_cog(AssignColour(bot))
     bot.add_cog(QuoteManager(bot, db))
