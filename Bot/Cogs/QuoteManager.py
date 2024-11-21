@@ -28,6 +28,7 @@ class QuoteManager(commands.Cog):
                 down+=1
         if down <1:
             down = 1
+
         if up >= down * ConfigLoader.Config.config["starratio"]:
             x = Database.DatabaseHandler.DatabaseHandler()
             y = await x.get_quote_starred(payload.message_id)
@@ -38,13 +39,12 @@ class QuoteManager(commands.Cog):
             if len(message.mentions) > 0:
                 e.set_author(name=message.mentions[0].name)
             await starchan.send("",embed=e)
-        if down > up *ConfigLoader.Config.config["deleteratio"]:
+        
+        if down >= up *ConfigLoader.Config.config["deleteratio"]:
             e = nextcord.Embed(description=message.content)
             e.set_author(name=f"{message.author.name}({message.author.id})")
             delchan = self.bot.get_channel(ConfigLoader.Config.config["deletechannel"])
             await delchan.send("", embed=e)
             x = Database.DatabaseHandler.DatabaseHandler()
-            await x.connect()
             await x.mark_quote_as_deleted(payload.message_id)
-            await x.close()
             await message.delete()
