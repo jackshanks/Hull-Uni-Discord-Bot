@@ -48,8 +48,8 @@ class DatabaseHandler:
         result = await self.execute_query("SELECT COUNT(*) FROM quotes")
         return result[0]
 
-    async def mark_quote_as_star():
+    async def mark_quote_as_star(self,id):
         pass
     
-    async def mark_quote_as_deleted():
+    async def mark_quote_as_deleted(self,id):
         pass
