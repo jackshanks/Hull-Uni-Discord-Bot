@@ -15,7 +15,7 @@ class Config:
         return cls._instance
 
     def __init__(self):
-        if self.config is None:
+        if self.config == dict():
             self.LoadConfig()
 
     def LoadConfig(self):
