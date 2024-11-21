@@ -8,7 +8,7 @@ quotechannels:
   - 554737777049206796 #testing
   - 1303662464793317376 #jinvithoughts
   - 1173986403902836806 #quotes
-starquotechannel: 123
-deletechannel: 456
-starratio: 5
-deleteratio: 5
+starquotechannel: 554737777049206796
+deletechannel: 554737777049206796
+starratio: 1
+deleteratio: 1
