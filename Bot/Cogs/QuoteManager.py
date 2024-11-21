@@ -62,7 +62,7 @@ class QuoteManager(BaseCog):
             try:
                 await self.db.submit_quote(message.id,splits[i],re.findall("<@[0-9]+>",splits[i+1])[0],message.author.id)
             except:
-                message.reply(f"error saving quote {splits[i]}")
+                message.reply(f"error saving quote: {splits[i]}")
 
         
         
