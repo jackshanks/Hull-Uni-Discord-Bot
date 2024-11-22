@@ -15,10 +15,19 @@ class MusicCommands(BaseCog):
     def __init__(self, bot: commands.Bot, db):
         super().__init__(bot, db)
         self.voice_clients = {}
-        self.node = [wavelink.Node(uri="http://localhost:8081", password="password")]
+        self.node = wavelink.Node(uri='http://localhost:8081', password='password')
 
-    async def connect(self):
-        await wavelink.Pool.connect(nodes=self.node, client=self.bot, cache_capacity=100)
+    async def cog_load(self) -> None:
+        """Set up the Wavelink node when the cog is loaded."""
+        try:
+            await wavelink.Pool.connect(
+                client=self.bot,
+                nodes=[self.node],
+                cache_capacity=100
+            )
+            print("Successfully connected to Lavalink node!")
+        except Exception as e:
+            print(f"Failed to connect to Lavalink node: {e}")
 
     @nextcord.slash_command(name="play", description="Play a song", guild_ids=Config().guild_ids)
     async def play(self, ctx: Interaction, query: str):
