@@ -45,7 +45,6 @@ class DatabaseHandler:
                 return tuple(row) if row else None
         except Exception as e:
             print(f"Query execution failed: {str(e)}\nQuery: {query}")
-            await self.close()
             raise
         finally:
             await self._connection.close()
@@ -57,7 +56,6 @@ class DatabaseHandler:
             return await self.execute_query("SELECT * FROM quotes ORDER BY RANDOM() LIMIT 1")
         except Exception as e:
             print(f"Get quote failed failed: {str(e)}")
-            await self.close()
             raise
         finally:
             await self.close()
@@ -70,16 +68,37 @@ class DatabaseHandler:
             return result[0]
         except Exception as e:
             print(f"Get number of quotes failed: {str(e)}")
-            await self.close()
             raise
         finally:
             await self.close()
 
     async def mark_quote_as_star(self, id):
-        pass
+        """Mark a quote as starred in the database."""
+        try:
+            await self.connect()
+            async with self._connection.execute(
+                    "UPDATE quotes SET star = 1 WHERE id = ?", (id,)
+            ) as cursor:
+                await self._connection.commit()
+                return cursor.rowcount > 0
+        except Exception as e:
+            print(f"Mark quote as star failed: {str(e)}")
+            raise
+        finally:
+            await self.close()
 
     async def mark_quote_as_deleted(self, id):
-        pass
+        """Mark a quote as deleted in the database."""
+        try:
+            await self.connect()
+            async with self._connection.execute("UPDATE quotes SET deleted = 1 WHERE id = ?", id) as cursor:
+                await self._connection.commit()
+                return cursor.rowcount > 0
+        except Exception as e:
+            print(f"Mark quote as deleted failed: {str(e)}")
+            raise
+        finally:
+            await self.close()
 
     async def get_quote_starred(self, id):
         try:
@@ -98,4 +117,20 @@ class DatabaseHandler:
             await self.close()
 
     async def submit_quote(self, id, content, said_by, quoted_by):
-        pass
+        """Submit a new quote to the database."""
+        try:
+            await self.connect()
+            async with self._connection.execute(
+                    """
+                    INSERT INTO quotes (id, quote, said_by, quoted_by, deleted, star)
+                    VALUES (?, ?, ?, ?, 0, 0)
+                    """,
+                    (id, content, said_by, quoted_by)
+            ) as cursor:
+                await self._connection.commit()
+                return cursor.rowcount > 0
+        except Exception as e:
+            print(f"Submit quote failed: {str(e)}")
+            raise
+        finally:
+            await self.close()
