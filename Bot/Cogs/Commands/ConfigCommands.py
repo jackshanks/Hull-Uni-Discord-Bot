@@ -8,9 +8,9 @@ import datetime
 
 
 class ConfigCommands(BaseCog):
-    @nextcord.slash_command(name="reloadconfig", description="reloads the config", guild_ids=Config().guild_ids)
+    @nextcord.slash_command(name="reload-config", description="reloads the config", guild_ids=Config().guild_ids)
     @application_checks.has_permissions(administrator=True)
-    async def reloadconfig(self, ctx: Interaction):
-        Config.LoadConfig()
+    async def reload_config(self, ctx: Interaction):
+        Config().LoadConfig()
         print(f"Config reloaded at {datetime.datetime.now()} by {ctx.user.name}({ctx.user.id})")
         await ctx.response.send_message("done", ephemeral=True)
