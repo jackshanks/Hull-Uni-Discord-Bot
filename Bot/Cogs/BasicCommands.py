@@ -14,3 +14,7 @@ class BasicCommands(BaseCog):
     async def help(self, ctx):
         return await ctx.response.send_message(
             'https://docs.google.com/document/d/1UtepVatMgyV7riBK9gXyhrvnkCMSEVjm94jsOq3Lzek/edit?usp=sharing')
+
+    @commands.Cog.listener
+    async def on_member_join(self, member):
+        await member.add_roles(member.guild.get_role(Config().welcome_role))

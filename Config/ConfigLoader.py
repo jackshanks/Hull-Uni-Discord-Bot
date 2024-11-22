@@ -25,3 +25,7 @@ class Config:
     @property
     def guild_ids(self):
         return self.config['guild_ids']
+
+    @property
+    def welcome_role(self):
+        return self.config['welcome_role']
