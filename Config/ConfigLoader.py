@@ -33,3 +33,24 @@ class Config:
     @property
     def colour(self):
         return self.config['colour']
+
+    @property
+    def quote_channels(self):
+        return self.config['quote_channels']
+
+    @property
+    def star_ratio(self):
+        return self.config['star_ratio']
+
+    @property
+    def star_quote_channel(self):
+        return self.config['star_quote_channel']
+
+    @property
+    def delete_ratio(self):
+        return self.config['delete_ratio']
+
+    @property
+    def delete_channel(self):
+        return self.config['delete_channel']
+
