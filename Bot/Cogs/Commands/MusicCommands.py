@@ -15,7 +15,7 @@ class MusicCommands(BaseCog):
     def __init__(self, bot: commands.Bot, db):
         super().__init__(bot, db)
         self.voice_clients = {}
-        self.node = [wavelink.Node(uri="http:// localhost:8081", password="password")]
+        self.node = [wavelink.Node(uri="http://localhost:8081", password="password")]
 
     async def connect(self):
         await wavelink.Pool.connect(nodes=self.node, client=self.bot, cache_capacity=100)
