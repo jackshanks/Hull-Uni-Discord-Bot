@@ -103,7 +103,7 @@ class DatabaseHandler:
     async def get_quote_starred(self, id):
         try:
             await self.connect()
-            result = await self.execute_query("SELECT star FROM quotes WHERE id = %s", id)
+            result = await self.execute_query("SELECT star FROM quotes WHERE id = ?", id)
             if result == 0:
                 return False
             elif result == 1:
