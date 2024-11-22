@@ -1,0 +1,15 @@
+--- # most finicky file type ever, if you press tab the bot crashes, DO NOT USE TABS
+colour:
+  - 1308119278284967976
+  - 1308119307951280239
+quote_channels:
+  - 554737777049206796 #testing
+  - 1173986403902836806 #quotes
+guild_ids:
+  - 554737777049206794  # Test Server
+  - 1153315295306465381 # Hull Uni
+welcome_role: 1211131520786636820
+star_quote_channel: 554737777049206796
+delete_channel: 554737777049206796
+star_ratio: 1
+delete_ratio: 1
