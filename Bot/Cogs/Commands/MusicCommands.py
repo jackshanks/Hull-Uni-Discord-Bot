@@ -16,7 +16,7 @@ class MusicCommands(BaseCog):
         super().__init__(bot, db)
         self.voice_clients = {}
         self.node = wavelink.Node(uri='http://localhost:8081', password='password')
-        self.cog_load()
+        self.bot.loop.create_task(self.cog_load())
 
     async def cog_load(self) -> None:
         """Set up the Wavelink node when the cog is loaded."""
