@@ -5,18 +5,18 @@ from Bot.Cogs._BaseCog import BaseCog
 from Config.ConfigLoader import Config
 
 
-class AssignColour(BaseCog):
+class ColourCommands(BaseCog):
     @nextcord.slash_command(name="assign-colour", description="Assign yourself a colour", guild_ids=Config().guild_ids)
     async def test(self, interaction: Interaction):
         for i in interaction.user.roles:
-            if i.id in Config().config.get('colour'):
+            if i.id in Config().colour:
                 await interaction.user.remove_roles(i)
         await interaction.response.send_message("Select new colour", view=DropdownView(interaction), ephemeral=True)
 
     @nextcord.slash_command(name="remove-colour", description="Go back to your default colour", guild_ids=Config().guild_ids)
     async def RemoveAllColour(self, interaction: Interaction):
         for i in interaction.user.roles:
-            if i.id in Config().config.get('colour'):
+            if i.id in Config().colour:
                 await interaction.user.remove_roles(i)
         await interaction.send(":+1: Your colour has been reset", ephemeral=True)
 
@@ -31,7 +31,7 @@ class DropdownView(nextcord.ui.View):
 class ColourDropdown(nextcord.ui.Select):
     def __init__(self, interaction: Interaction = None):
         select_options = []
-        for i in Config().config.get('colour'):
+        for i in Config().colour:
             try:
                 role = interaction.guild.get_role(i)
                 select_options.append(nextcord.SelectOption(label=role.name, description=str(role.colour)))

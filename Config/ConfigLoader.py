@@ -29,3 +29,7 @@ class Config:
     @property
     def welcome_role(self):
         return self.config['welcome_role']
+
+    @property
+    def colour(self):
+        return self.config['colour']

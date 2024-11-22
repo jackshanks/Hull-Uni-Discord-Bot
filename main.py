@@ -2,11 +2,11 @@ import nextcord
 import os
 from Config.ConfigLoader import Config
 from nextcord.ext import commands
-from Bot.Cogs.QuoteManager import QuoteManager
-from Bot.Cogs.QuoteCommands import QuoteCommands
-from Bot.Cogs.AssignColour import AssignColour
-from Bot.Cogs.BasicCommands import BasicCommands
-from Bot.Cogs.Config import ConfigCommands
+from Bot.Cogs.Managers.QuoteManager import QuoteManager
+from Bot.Cogs.Commands.QuoteCommands import QuoteCommands
+from Bot.Cogs.Commands.ColourCommands import ColourCommands
+from Bot.Cogs.Commands.BasicCommands import BasicCommands
+from Bot.Cogs.Commands.ConfigCommands import ConfigCommands
 from Database import DatabaseHandler
 
 Config()
@@ -21,7 +21,7 @@ db = DatabaseHandler.DatabaseHandler()
 @bot.event
 async def on_ready():
     bot.add_cog(QuoteCommands(bot, db))
-    bot.add_cog(AssignColour(bot, db))
+    bot.add_cog(ColourCommands(bot, db))
     bot.add_cog(QuoteManager(bot, db))
     bot.add_cog(BasicCommands(bot, db))
     bot.add_cog(ConfigCommands(bot, db))
