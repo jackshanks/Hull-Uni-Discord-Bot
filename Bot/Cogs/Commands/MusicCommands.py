@@ -36,8 +36,6 @@ class MusicCommands(BaseCog):
         if not ctx.guild:
             return
 
-        await self.connect()
-
         # Get the voice state of the user
         if not ctx.user.voice:
             await ctx.response.send_message("Please join a voice channel first before using this command.")
