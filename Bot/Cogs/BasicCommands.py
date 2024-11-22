@@ -15,6 +15,9 @@ class BasicCommands(BaseCog):
         return await ctx.response.send_message(
             'https://docs.google.com/document/d/1UtepVatMgyV7riBK9gXyhrvnkCMSEVjm94jsOq3Lzek/edit?usp=sharing')
 
-    @commands.Cog.listener
+    @commands.Cog.listener(name="on_member_join")
     async def on_member_join(self, member):
-        await member.add_roles(member.guild.get_role(Config().welcome_role))
+        if 1153315295306465381 == member.guild.id:
+            await member.add_roles(member.guild.get_role(Config().welcome_role))
+        else:
+            pass
