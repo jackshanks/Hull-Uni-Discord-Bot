@@ -1,5 +1,7 @@
 import nextcord
 import os
+
+from Bot.Cogs.Commands.MusicCommands import MusicCommands
 from Config.ConfigLoader import Config
 from nextcord.ext import commands
 from Bot.Cogs.Managers.QuoteManager import QuoteManager
@@ -10,11 +12,9 @@ from Bot.Cogs.Commands.ConfigCommands import ConfigCommands
 from Database import DatabaseHandler
 
 Config()
-print(Config.guild_ids)
 
 intents = nextcord.Intents.all()
 bot = commands.Bot(intents=intents)
-
 db = DatabaseHandler.DatabaseHandler()
 
 
@@ -25,6 +25,7 @@ async def on_ready():
     bot.add_cog(QuoteManager(bot, db))
     bot.add_cog(BasicCommands(bot, db))
     bot.add_cog(ConfigCommands(bot, db))
+    bot.add_cog(MusicCommands(bot, db))
     bot.add_all_cog_commands()
     await bot.sync_all_application_commands()
     print("ready")
