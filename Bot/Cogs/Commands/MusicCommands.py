@@ -21,17 +21,24 @@ class MusicCommands(BaseCog):
         await wavelink.Pool.connect(nodes=self.node, client=self.bot, cache_capacity=100)
 
     @nextcord.slash_command(name="play", description="Play a song", guild_ids=Config().guild_ids)
-    async def play(self, ctx: commands.Context):
+    async def play(self, ctx: Interaction, query: str):
         """Play a song with the given query."""
         if not ctx.guild:
             return
 
+        await self.connect()
+
+        # Get the voice state of the user
+        if not ctx.user.voice:
+            await ctx.response.send_message("Please join a voice channel first before using this command.")
+            return
+
         player: wavelink.Player
-        player = cast(wavelink.Player, ctx.voice_client)  # type: ignore
+        player = cast(wavelink.Player, ctx.guild.voice_client)
 
         if not player:
             try:
-                player = await ctx.author.voice.channel.connect(cls=wavelink.Player)  # type: ignore
+                player = await ctx.user.voice.channel.connect()
             except AttributeError:
                 await ctx.send("Please join a voice channel first before using this command.")
                 return
@@ -50,9 +57,9 @@ class MusicCommands(BaseCog):
                 f"You can only play songs in {player.home.mention}, as the player has already started there.")
             return
 
-        tracks: wavelink.Search = await wavelink.Playable.search(ctx.message.content)
+        tracks: wavelink.Search = await wavelink.Playable.search(query)
         if not tracks:
-            await ctx.send(f"{ctx.author.mention} - Could not find any tracks with that query. Please try again.")
+            await ctx.send(f"{ctx.message.author.mention} - Could not find any tracks with that query. Please try again.")
             return
 
         if isinstance(tracks, wavelink.Playlist):
@@ -67,9 +74,9 @@ class MusicCommands(BaseCog):
             await player.play(player.queue.get(), volume=30)
 
     @nextcord.slash_command(name="skip", description="Skip a song", guild_ids=Config().guild_ids)
-    async def skip(self, ctx: commands.Context):
+    async def skip(self, ctx: Interaction):
         """Skip the current song."""
-        player: wavelink.Player = cast(wavelink.Player, ctx.voice_client)
+        player: wavelink.Player = cast(wavelink.Player, ctx.guild.voice_client)
         if not player:
             return
 
@@ -77,9 +84,9 @@ class MusicCommands(BaseCog):
         await ctx.message.add_reaction("\u2705")
 
     @nextcord.slash_command(name="pause_resume", description="Pause/Resume a song", guild_ids=Config().guild_ids)
-    async def pause_resume(self, ctx: commands.Context):
+    async def pause_resume(self, ctx: Interaction):
         """Pause or Resume the Player depending on its current state."""
-        player: wavelink.Player = cast(wavelink.Player, ctx.voice_client)
+        player: wavelink.Player = cast(wavelink.Player, ctx.guild.voice_client)
         if not player:
             return
 
@@ -87,9 +94,9 @@ class MusicCommands(BaseCog):
         await ctx.message.add_reaction("\u2705")
 
     @nextcord.slash_command(name="disconnect", description="Disconnect the bot", guild_ids=Config().guild_ids)
-    async def disconnect(self, ctx: commands.Context):
+    async def disconnect(self, ctx: Interaction):
         """Disconnect the Player."""
-        player: wavelink.Player = cast(wavelink.Player, ctx.voice_client)
+        player: wavelink.Player = cast(wavelink.Player, ctx.guild.voice_client)
         if not player:
             return
 
