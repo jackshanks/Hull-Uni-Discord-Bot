@@ -1,5 +1,7 @@
-nextcord[voice]
+nextcord[voice]~=2.6.0
 setuptools
-pyyaml
+pyyaml~=6.0.2
 aiosqlite~=0.20.0
-emoji
+emoji~=2.14.0
+lavalink
+nextcordwavelink

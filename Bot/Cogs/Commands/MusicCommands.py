@@ -1,13 +1,11 @@
-﻿import wavelink
+﻿import asyncio
+
+import nextcordwavelink as wavelink
 from nextcord.ext import commands
 from nextcord import Interaction
 import nextcord
 from typing import cast
-from nextcord.ext import application_checks
-from Bot.Cogs._BaseCog import BaseCog
 from Config.ConfigLoader import Config
-import datetime
-
 from Bot.Cogs._BaseCog import BaseCog
 
 
@@ -16,7 +14,6 @@ class MusicCommands(BaseCog):
         super().__init__(bot, db)
         self.voice_clients = {}
         self.node = wavelink.Node(uri='http://127.0.0.1:2333', password='password')
-        self.bot.loop.create_task(self.cog_load())
 
     async def cog_load(self) -> None:
         """Set up the Wavelink node when the cog is loaded."""
@@ -46,7 +43,9 @@ class MusicCommands(BaseCog):
 
         if not player:
             try:
-                player = await ctx.user.voice.channel.connect()
+                wavelink_player = wavelink.Player(self.bot, ctx.user.voice.channel)
+                player = await ctx.user.voice.channel.connect(cls=wavelink_player)
+                await player.set_volume(100)
             except AttributeError:
                 await ctx.send("Please join a voice channel first before using this command.")
                 return
@@ -67,7 +66,7 @@ class MusicCommands(BaseCog):
 
         tracks: wavelink.Search = await wavelink.Playable.search(query)
         if not tracks:
-            await ctx.send(f"{ctx.message.author.mention} - Could not find any tracks with that query. Please try again.")
+            await ctx.send(f"{ctx.user.mention} - Could not find any tracks with that query. Please try again.")
             return
 
         if isinstance(tracks, wavelink.Playlist):
@@ -79,7 +78,7 @@ class MusicCommands(BaseCog):
             await ctx.send(f"Added **`{track}`** to the queue.")
 
         if not player.playing:
-            await player.play(player.queue.get(), volume=30)
+            await player.play(player.queue.get())
 
     @nextcord.slash_command(name="skip", description="Skip a song", guild_ids=Config().guild_ids)
     async def skip(self, ctx: Interaction):
@@ -99,7 +98,6 @@ class MusicCommands(BaseCog):
             return
 
         await player.pause(not player.paused)
-        await ctx.message.add_reaction("\u2705")
 
     @nextcord.slash_command(name="disconnect", description="Disconnect the bot", guild_ids=Config().guild_ids)
     async def disconnect(self, ctx: Interaction):
@@ -134,3 +132,4 @@ class MusicCommands(BaseCog):
             embed.add_field(name="Album", value=track.album.name)
 
         await player.home.send(embed=embed)
+
