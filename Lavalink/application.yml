@@ -1,11 +1,11 @@
 ﻿server:
-  port: 8081
-  address: 0.0.0.0
+  port: 2333
+  address: 127.0.0.1
 lavalink:
   server:
     password: "password"
     sources:
-      youtube: true
+      youtube: false
       bandcamp: true
       soundcloud: true
       twitch: true
@@ -16,14 +16,23 @@ lavalink:
     playerUpdateInterval: 5
     youtubeSearchEnabled: true
     soundcloudSearchEnabled: true
+  plugins:
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.8.3"
+      snapshot: false
 metrics:
   prometheus:
     enabled: false
     endpoint: /metrics
-  influx:
-    enabled: false
-    dbName: lavalink
-    hostname: localhost
-    port: 8086
-    username: admin
-    password: password
+plugins:
+  youtube:
+    enabled: true # Whether this source can be used.
+    allowSearch: true # Whether "ytsearch:" and "ytmsearch:" can be used.
+    allowDirectVideoIds: true # Whether just video IDs can match. If false, only complete URLs will be loaded.
+    allowDirectPlaylistIds: true # Whether just playlist IDs can match. If false, only complete URLs will be loaded.
+    # The clients to use for track loading. See below for a list of valid clients.
+    # Clients are queried in the order they are given (so the first client is queried first and so on...)
+    clients:
+      - MUSIC
+      - ANDROID_VR
+      - WEB
+      - WEBEMBEDDED 
