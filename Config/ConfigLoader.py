@@ -16,11 +16,21 @@ class Config:
 
     def __init__(self):
         if self.config == dict():
-            self.LoadConfig()
+            self.load_config()
 
-    def LoadConfig(self):
+    def load_config(self):
         x = urllib.request.urlopen(CONFIG_URL)
         self.config = yaml.safe_load(x)
+
+    def add(self, query, target):
+        x = urllib.request.urlopen(CONFIG_URL)
+        data = yaml.safe_load(x)
+        data[target].append(query)
+
+    def remove(self, query, target):
+        x = urllib.request.urlopen(CONFIG_URL)
+        data = yaml.safe_load(x)
+        data[target].remove(query)
 
     @property
     def guild_ids(self):
@@ -54,3 +64,6 @@ class Config:
     def delete_channel(self):
         return self.config['delete_channel']
 
+    @property
+    def game(self):
+        return self.config['game']

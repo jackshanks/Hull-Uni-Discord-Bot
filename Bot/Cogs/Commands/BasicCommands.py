@@ -19,5 +19,3 @@ class BasicCommands(BaseCog):
     async def on_member_join(self, member):
         if 1153315295306465381 == member.guild.id:
             await member.add_roles(member.guild.get_role(Config().welcome_role))
-        else:
-            pass
