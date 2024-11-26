@@ -54,3 +54,8 @@ class Config:
     def delete_channel(self):
         return self.config['delete_channel']
 
+    @property
+    def game(self):
+        return self.config['game']
+
+

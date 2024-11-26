@@ -1,5 +1,6 @@
 ﻿import asyncio
 
+import emoji
 import nextcordwavelink as wavelink
 from nextcord.ext import commands
 from nextcord import Interaction
@@ -71,11 +72,11 @@ class MusicCommands(BaseCog):
 
         if isinstance(tracks, wavelink.Playlist):
             added: int = await player.queue.put_wait(tracks)
-            await ctx.send(f"Added the playlist **`{tracks.name}`** ({added} songs) to the queue.")
+            await ctx.send(f"{ctx.user.mention} Added the playlist **`{tracks.name}`** ({added} songs) to the queue.")
         else:
             track: wavelink.Playable = tracks[0]
             await player.queue.put_wait(track)
-            await ctx.send(f"Added **`{track}`** to the queue.")
+            await ctx.send(f"{ctx.user.mention} Added **`{track}`** to the queue.")
 
         if not player.playing:
             await player.play(player.queue.get())
@@ -87,8 +88,8 @@ class MusicCommands(BaseCog):
         if not player:
             return
 
+        await ctx.send(f"{player.current.title} skipped by {ctx.user.mention}!")
         await player.skip(force=True)
-        await ctx.message.add_reaction("\u2705")
 
     @nextcord.slash_command(name="pause_resume", description="Pause/Resume a song", guild_ids=Config().guild_ids)
     async def pause_resume(self, ctx: Interaction):
@@ -98,6 +99,28 @@ class MusicCommands(BaseCog):
             return
 
         await player.pause(not player.paused)
+        if player.paused:
+            await ctx.send(f"Paused by {ctx.user.mention}!")
+        else:
+            await ctx.send(f"Resumed by {ctx.user.mention}!")
+
+    @nextcord.slash_command(name="clear", description="Clear the queue", guild_ids=Config().guild_ids)    
+    async def clear_queue(self, ctx: Interaction):
+        player: wavelink.Player = cast(wavelink.Player, ctx.guild.voice_client)
+        if not player:
+            return
+
+        player.queue.clear()
+        await ctx.send(f"Queue cleared by {ctx.user.mention}!")
+
+    @nextcord.slash_command(name="view", description="Clear the queue", guild_ids=Config().guild_ids)
+    async def view_queue(self, ctx: Interaction):
+        player: wavelink.Player = cast(wavelink.Player, ctx.guild.voice_client)
+        if not player:
+            return
+
+        queue = player.queue.get()
+        await ctx.send(f"Queue cleared by {ctx.user.mention}!")
 
     @nextcord.slash_command(name="disconnect", description="Disconnect the bot", guild_ids=Config().guild_ids)
     async def disconnect(self, ctx: Interaction):
@@ -107,7 +130,7 @@ class MusicCommands(BaseCog):
             return
 
         await player.disconnect()
-        await ctx.message.add_reaction("\u2705")
+        await ctx.send(f"{ctx.user.mention} disconnected the bot!")
 
     @commands.Cog.listener(name="on_wavelink_track_start")
     async def on_wavelink_track_start(self, payload: wavelink.TrackStartEventPayload) -> None:

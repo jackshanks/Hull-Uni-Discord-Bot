@@ -1,7 +1,7 @@
 ﻿import nextcord
-from nextcord.ext import commands
 from nextcord import Interaction
 from Config.ConfigLoader import Config
+
 
 class DropdownView(nextcord.ui.View):
     def __init__(self, interaction, role_type):
@@ -23,6 +23,22 @@ class ColourDropdown(nextcord.ui.Select):
             except:
                 continue
         super().__init__(placeholder="none", min_values=1, max_values=1, options=select_options)
+
+    async def callback(self, interaction: Interaction) -> None:
+        role = nextcord.utils.get(interaction.guild.roles, name=self.values[0])
+        await interaction.user.add_roles(role)
+
+
+class GameDropdown(nextcord.ui.Select):
+    def __init__(self, interaction: Interaction = None):
+        select_options = []
+        for i in Config().game:
+            try:
+                role = interaction.guild.get_role(i)
+                select_options.append(nextcord.SelectOption(label=role.name, description=f"Ability to see the {role.name} channel!"))
+            except:
+                continue
+        super().__init__(placeholder="none", min_values=1, max_values=25, options=select_options)
 
     async def callback(self, interaction: Interaction) -> None:
         role = nextcord.utils.get(interaction.guild.roles, name=self.values[0])
