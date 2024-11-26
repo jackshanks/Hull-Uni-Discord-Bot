@@ -9,7 +9,7 @@ class DropdownView(nextcord.ui.View):
         self.timeout = 30.0
         if role_type == "colour":
             self.add_item(ColourDropdown(interaction))
-        if role_type == "game":
+        elif role_type == "game":
             self.add_item(GameDropdown(interaction))
 
 
