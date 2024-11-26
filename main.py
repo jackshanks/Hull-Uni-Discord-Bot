@@ -30,6 +30,8 @@ async def on_ready():
     bot.add_cog(music_cog)
     bot.add_all_cog_commands()
     await bot.sync_all_application_commands()
+    await bot.change_presence(activity=nextcord.Activity(type=nextcord.ActivityType.listening, name="talk tuah"),
+                              status=nextcord.Status.do_not_disturb)
     print("ready")
 
 
