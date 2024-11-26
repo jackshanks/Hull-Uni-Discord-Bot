@@ -6,7 +6,7 @@ from Config.ConfigLoader import Config
 from nextcord.ext import commands
 from Bot.Cogs.Managers.QuoteManager import QuoteManager
 from Bot.Cogs.Commands.QuoteCommands import QuoteCommands
-from Bot.Cogs.Commands.ColourCommands import RoleCommands
+from Bot.Cogs.Commands.RoleCommands import RoleCommands
 from Bot.Cogs.Commands.BasicCommands import BasicCommands
 from Bot.Cogs.Commands.ConfigCommands import ConfigCommands
 from Database import DatabaseHandler
