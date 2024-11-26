@@ -119,8 +119,9 @@ class MusicCommands(BaseCog):
         if not player:
             return
 
-        queue = player.queue.get()
-        await ctx.send(f"Queue cleared by {ctx.user.mention}!")
+        queue = player.queue
+        for i in queue:
+            await ctx.send(f"{i.position}) {i.title}")
 
     @nextcord.slash_command(name="disconnect", description="Disconnect the bot", guild_ids=Config().guild_ids)
     async def disconnect(self, ctx: Interaction):
