@@ -18,6 +18,7 @@ lavalink:
     soundcloudSearchEnabled: true
   plugins:
     - dependency: "dev.lavalink.youtube:youtube-plugin:1.8.3"
+    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.3.0"
       snapshot: false
 metrics:
   prometheus:
@@ -36,3 +37,11 @@ plugins:
       - ANDROID_VR
       - WEB
       - WEBEMBEDDED 
+  lavasrc:
+    sources:
+      spotify: true
+    spotify:
+      clientId: "8eae0adccf6e46a898bd4637e5414ec6"
+      clientSecret: ${spotify}
+      countryCode: "UK"
+      resolveArtistsInSearch: true
