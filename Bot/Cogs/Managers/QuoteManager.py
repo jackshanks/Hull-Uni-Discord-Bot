@@ -49,6 +49,8 @@ class QuoteManager(BaseCog):
 
     @commands.Cog.listener(name="on_message")
     async def on_message(self, message: nextcord.Message):
+        if not message.channel.id in Config().quote_channels:
+            return
         if message.author == self.bot.user:
             return
         if len(message.mentions) == 0:
