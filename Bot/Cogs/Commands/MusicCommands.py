@@ -65,14 +65,15 @@ class MusicCommands(BaseCog):
                 f"You can only play songs in {player.home.mention}, as the player has already started there.")
             return
 
-        tracks: wavelink.Search = await wavelink.Playable.search(query)
+        tracks: wavelink.Search = await wavelink.Playable.search(f"{query}")
         if not tracks:
             await ctx.send(f"{ctx.user.mention} - Could not find any tracks with that query. Please try again.")
             return
 
-        if isinstance(tracks, wavelink.Playlist):
-            added: int = await player.queue.put_wait(tracks)
-            await ctx.send(f"{ctx.user.mention} Added the playlist **`{tracks.name}`** ({added} songs) to the queue.")
+        if hasattr(tracks, "url"):
+            for track in tracks:
+                await player.queue.put_wait(track)
+            await ctx.send(f"{ctx.user.mention} Added the playlist **`{tracks.url}`** to the queue.")
         else:
             track: wavelink.Playable = tracks[0]
             await player.queue.put_wait(track)
@@ -104,7 +105,7 @@ class MusicCommands(BaseCog):
         else:
             await ctx.send(f"Resumed by {ctx.user.mention}!")
 
-    @nextcord.slash_command(name="clear", description="Clear the queue", guild_ids=Config().guild_ids)    
+    @nextcord.slash_command(name="clear", description="Clear the queue", guild_ids=Config().guild_ids)
     async def clear_queue(self, ctx: Interaction):
         player: wavelink.Player = cast(wavelink.Player, ctx.guild.voice_client)
         if not player:
@@ -113,15 +114,33 @@ class MusicCommands(BaseCog):
         player.queue.clear()
         await ctx.send(f"Queue cleared by {ctx.user.mention}!")
 
-    @nextcord.slash_command(name="view", description="Clear the queue", guild_ids=Config().guild_ids)
+    @nextcord.slash_command(name="view", description="View the queue", guild_ids=Config().guild_ids)
     async def view_queue(self, ctx: Interaction):
         player: wavelink.Player = cast(wavelink.Player, ctx.guild.voice_client)
         if not player:
             return
 
-        queue = player.queue
+        queue = player.queue[:50]  # Slice first 50 tracks
+        tostring = ""
+        a = 0
         for i in queue:
-            await ctx.send(f"{i.position}) {i.title}")
+            a+=1
+            tostring += f"{a}) {i.title}\n"
+
+        if len(player.queue) > 50:
+            tostring += f"\n... and {len(player.queue) - 50} more tracks"
+
+        await ctx.send(tostring)
+
+    @nextcord.slash_command(name="shuffle", description="Shuffle the queue", guild_ids=Config().guild_ids)
+    async def shuffle(self, ctx: Interaction):
+        """Disconnect the Player."""
+        player: wavelink.Player = cast(wavelink.Player, ctx.guild.voice_client)
+        if not player:
+            return
+
+        player.queue.shuffle()
+        await ctx.send(f"{ctx.user.mention} shuffled the queue!")
 
     @nextcord.slash_command(name="disconnect", description="Disconnect the bot", guild_ids=Config().guild_ids)
     async def disconnect(self, ctx: Interaction):
@@ -156,4 +175,3 @@ class MusicCommands(BaseCog):
             embed.add_field(name="Album", value=track.album.name)
 
         await player.home.send(embed=embed)
-
