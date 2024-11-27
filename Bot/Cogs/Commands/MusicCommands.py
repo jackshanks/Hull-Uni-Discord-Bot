@@ -121,6 +121,10 @@ class MusicCommands(BaseCog):
             return
 
         queue = player.queue[:50]  # Slice first 50 tracks
+        if len(queue) < 1:
+            await ctx.send("The queue is empty")
+            return
+
         tostring = ""
         a = 0
         for i in queue:
