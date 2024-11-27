@@ -36,12 +36,14 @@ plugins:
       - MUSIC
       - ANDROID_VR
       - WEB
-      - WEBEMBEDDED 
+      - WEBEMBEDDED
   lavasrc:
     sources:
       spotify: true
     spotify:
       clientId: "8eae0adccf6e46a898bd4637e5414ec6"
       clientSecret: ${spotify}
+      playlistLoadLimit: 6 # The number of pages at 100 tracks each
+      albumLoadLimit: 6 # The number of pages at 50 tracks each
       countryCode: "UK"
       resolveArtistsInSearch: true
