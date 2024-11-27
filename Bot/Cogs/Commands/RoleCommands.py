@@ -1,7 +1,7 @@
 from nextcord.ext import commands
 from nextcord import Interaction
 import nextcord
-
+from Database.DatabaseHandler import DatabaseHandler
 from Bot.Cogs.Managers.DropdownManager import DropdownView
 from Bot.Cogs._BaseCog import BaseCog
 from Config.ConfigLoader import Config
@@ -15,7 +15,7 @@ class RoleCommands(BaseCog):
     @nextcord.slash_command(name="clear-colour", description="Go back to your default colour",guild_ids=Config().guild_ids)
     async def remove_all_colour(self, interaction: Interaction):
         for i in interaction.user.roles:
-            if i.id in Config().colour:
+            if i.id in self.db.get_colours:
                 await interaction.user.remove_roles(i)
         await interaction.send(":+1: Your colour has been reset", ephemeral=True)
 
@@ -26,6 +26,6 @@ class RoleCommands(BaseCog):
     @nextcord.slash_command(name="clear-games", description="Remove all your game roles!", guild_ids=Config().guild_ids)
     async def remove_games(self, interaction: Interaction):
         for i in interaction.user.roles:
-            if i.id in Config().game:
+            if i.id in self.db.get_games:
                 await interaction.user.remove_roles(i)
         await interaction.send(":+1: Your games have been reset", ephemeral=True)

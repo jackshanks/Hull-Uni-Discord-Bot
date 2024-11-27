@@ -21,9 +21,10 @@ class AdminCommands(BaseCog):
 
     @nextcord.slash_command(name="add-colour", description="Adds a colour role", guild_ids=Config().guild_ids)
     @application_checks.has_permissions(administrator=True)
-    async def add_colour(self, ctx: Interaction, query: int):
+    async def add_colour(self, ctx: Interaction, query: str):
         try:
-            Config().add(query, "colour")
+            role = self.bot.create_role(ctx.guild.id, query)
+            self.db.add_colour(role.id)
             await ctx.response.send_message("201 Added", ephemeral=True)
         except Exception as e:
             print("Error processing command: " + str(e))
@@ -31,9 +32,10 @@ class AdminCommands(BaseCog):
 
     @nextcord.slash_command(name="add-game", description="Adds a game role", guild_ids=Config().guild_ids)
     @application_checks.has_permissions(administrator=True)
-    async def add_game(self, ctx: Interaction, query: int):
+    async def add_game(self, ctx: Interaction, query: str):
         try:
-            Config().add(query, "game")
+            role = self.bot.create_role(ctx.guild.id, query)
+            self.db.add_game(role.id)
             await ctx.response.send_message("201 Added", ephemeral=True)
         except Exception as e:
             print("Error processing command: " + str(e))
@@ -41,9 +43,9 @@ class AdminCommands(BaseCog):
 
     @nextcord.slash_command(name="remove-colour", description="Removes a colour role", guild_ids=Config().guild_ids)
     @application_checks.has_permissions(administrator=True)
-    async def remove_colour(self, ctx: Interaction, query: int):
+    async def remove_colour(self, ctx: Interaction, query: nextcord.Role):
         try:
-            Config().remove(query, "colour")
+            self.db.remove_colour(nextcord.Role)
             await ctx.response.send_message("201 Removed", ephemeral=True)
         except Exception as e:
             print("Error processing command: " + str(e))
@@ -51,9 +53,9 @@ class AdminCommands(BaseCog):
 
     @nextcord.slash_command(name="remove-game", description="Removes a game role", guild_ids=Config().guild_ids)
     @application_checks.has_permissions(administrator=True)
-    async def add_game(self, ctx: Interaction, query: int):
+    async def remove_game(self, ctx: Interaction, query: nextcord.Role):
         try:
-            Config().add(query, "game")
+            self.db.remove_game(nextcord.Role)
             await ctx.response.send_message("201 Removed", ephemeral=True)
         except Exception as e:
             print("Error processing command: " + str(e))

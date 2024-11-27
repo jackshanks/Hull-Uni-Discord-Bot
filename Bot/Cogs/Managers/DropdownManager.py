@@ -4,19 +4,20 @@ from Config.ConfigLoader import Config
 
 
 class DropdownView(nextcord.ui.View):
-    def __init__(self, interaction, role_type):
+    def __init__(self, interaction, role_type, db):
         super().__init__()
         self.timeout = 30.0
         if role_type == "colour":
-            self.add_item(ColourDropdown(interaction))
+            self.add_item(ColourDropdown(interaction, db))
         elif role_type == "game":
-            self.add_item(GameDropdown(interaction))
+            self.add_item(GameDropdown(interaction), db)
 
 
 class ColourDropdown(nextcord.ui.Select):
-    def __init__(self, interaction: Interaction = None):
+    def __init__(self, db, interaction: Interaction = None):
+        self.db = db
         select_options = []
-        for i in Config().colour:
+        for i in self.db.get_colours:
             try:
                 role = interaction.guild.get_role(i)
                 select_options.append(nextcord.SelectOption(label=role.name, description=str(role.colour)))
@@ -26,16 +27,17 @@ class ColourDropdown(nextcord.ui.Select):
 
     async def callback(self, interaction: Interaction) -> None:
         for i in interaction.user.roles:
-            if i.id in Config().colour:
+            if i.id in self.db.get_colour:
                 await interaction.user.remove_roles(i)
         role = nextcord.utils.get(interaction.guild.roles, name=self.values[0])
         await interaction.user.add_roles(role)
 
 
 class GameDropdown(nextcord.ui.Select):
-    def __init__(self, interaction: Interaction = None):
+    def __init__(self, db, interaction: Interaction = None):
+        self.db = db
         select_options = []
-        for i in Config().game:
+        for i in self.db.get_games:
             try:
                 role = interaction.guild.get_role(i)
                 select_options.append(nextcord.SelectOption(label=role.name, description=f"Ability to see the {role.name} channel!"))

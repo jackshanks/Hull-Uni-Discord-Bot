@@ -134,3 +134,49 @@ class DatabaseHandler:
             raise
         finally:
             await self.close()
+
+    async def get_colours(self):
+        try:
+            await self.connect()
+            result = await self.execute_query("SELECT * FROM colour")
+            return result
+        except Exception as e:
+            print(f"Submit quote failed: {str(e)}")
+            raise
+        finally:
+            await self.close()
+
+    async def get_games(self):
+        try:
+            await self.connect()
+            result = await self.execute_query("SELECT * FROM game")
+            return result
+        except Exception as e:
+            print(f"Submit quote failed: {str(e)}")
+            raise
+        finally:
+            await self.close()
+
+    async def add_game(self, game_id):
+        try:
+            await self.connect()
+            async with self._connection.execute("INSERT INTO game (id)VALUES (?)", game_id) as cursor:
+                await self._connection.commit()
+                return cursor.rowcount > 0
+        except Exception as e:
+            print(f"Add game failed: {str(e)}")
+            raise
+        finally:
+            await self.close()
+
+    async def add_colour(self, colour_id):
+        try:
+            await self.connect()
+            async with self._connection.execute("INSERT INTO colour (id)VALUES (?)", colour_id) as cursor:
+                await self._connection.commit()
+                return cursor.rowcount > 0
+        except Exception as e:
+            print(f"Add game failed: {str(e)}")
+            raise
+        finally:
+            await self.close()

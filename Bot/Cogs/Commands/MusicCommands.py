@@ -113,7 +113,7 @@ class MusicCommands(BaseCog):
         player.queue.clear()
         await ctx.send(f"Queue cleared by {ctx.user.mention}!")
 
-    @nextcord.slash_command(name="view", description="Clear the queue", guild_ids=Config().guild_ids)
+    @nextcord.slash_command(name="view", description="View the queue", guild_ids=Config().guild_ids)
     async def view_queue(self, ctx: Interaction):
         player: wavelink.Player = cast(wavelink.Player, ctx.guild.voice_client)
         if not player:

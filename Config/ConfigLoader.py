@@ -22,16 +22,6 @@ class Config:
         x = urllib.request.urlopen(CONFIG_URL)
         self.config = yaml.safe_load(x)
 
-    def add(self, query, target):
-        x = urllib.request.urlopen(CONFIG_URL)
-        data = yaml.safe_load(x)
-        data[target].append(query)
-
-    def remove(self, query, target):
-        x = urllib.request.urlopen(CONFIG_URL)
-        data = yaml.safe_load(x)
-        data[target].remove(query)
-
     @property
     def guild_ids(self):
         return self.config['guild_ids']
@@ -39,10 +29,6 @@ class Config:
     @property
     def welcome_role(self):
         return self.config['welcome_role']
-
-    @property
-    def colour(self):
-        return self.config['colour']
 
     @property
     def quote_channels(self):
@@ -63,7 +49,3 @@ class Config:
     @property
     def delete_channel(self):
         return self.config['delete_channel']
-
-    @property
-    def game(self):
-        return self.config['game']
