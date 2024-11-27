@@ -64,7 +64,8 @@ class MusicCommands(BaseCog):
             await ctx.send(
                 f"You can only play songs in {player.home.mention}, as the player has already started there.")
             return
-
+        
+        print(query)
         tracks: wavelink.Search = await wavelink.Playable.search(str(query))
         if not tracks:
             await ctx.send(f"{ctx.user.mention} - Could not find any tracks with that query. Please try again.")
