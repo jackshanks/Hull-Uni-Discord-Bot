@@ -66,7 +66,7 @@ class MusicCommands(BaseCog):
             return
 
         if "spotify" in query:
-            tracks: wavelink.Search = await wavelink.Playable.search(query, source="spsearch:")
+            tracks: wavelink.Search = await wavelink.Playable.search(query, source="spotify")
         else:
             tracks: wavelink.Search = await wavelink.Playable.search(query)
         if not tracks:
