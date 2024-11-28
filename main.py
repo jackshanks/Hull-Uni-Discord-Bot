@@ -20,6 +20,7 @@ db = DatabaseHandler.DatabaseHandler()
 
 @bot.event
 async def on_ready():
+    print(os.getenv("spotify"))
     # bot.add_cog(QuoteCommands(bot, db))
     bot.add_cog(RoleCommands(bot, db))
     # bot.add_cog(QuoteManager(bot, db))
