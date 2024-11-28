@@ -73,7 +73,7 @@ class MusicCommands(BaseCog):
         if hasattr(tracks, "url"):
             for track in tracks:
                 await player.queue.put_wait(track)
-            await ctx.send(f"{ctx.user.mention} Added the playlist **`{tracks}`** to the queue.")
+            await ctx.send(f"{ctx.user.mention} Added the playlist **`{tracks[0].playlist.name}`** to the queue.")
         else:
             track: wavelink.Playable = tracks[0]
             await player.queue.put_wait(track)
