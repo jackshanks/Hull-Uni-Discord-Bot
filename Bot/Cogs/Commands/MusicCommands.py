@@ -70,10 +70,14 @@ class MusicCommands(BaseCog):
             await ctx.send(f"{ctx.user.mention} - Could not find any tracks with that query. Please try again.")
             return
 
-        if hasattr(tracks, "url"):
+        if isinstance(tracks, wavelink.Playlist):
             for track in tracks:
                 await player.queue.put_wait(track)
-            await ctx.send(f"{ctx.user.mention} Added the playlist **`{tracks[0].playlist.name}`** to the queue.")
+
+            if "spotify" in query:
+                await ctx.send(f"{ctx.user.mention} Added the playlist **`Spotify doesn't send playlist names :)`** to the queue.")
+            else:
+                await ctx.send(f"{ctx.user.mention} Added the playlist **`{tracks.name}`** to the queue.")
         else:
             track: wavelink.Playable = tracks[0]
             await player.queue.put_wait(track)
