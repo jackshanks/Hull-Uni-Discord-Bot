@@ -67,3 +67,7 @@ class Config:
     @property
     def game(self):
         return self.config['game']
+
+    @property
+    def rule_channel(self):
+        return self.config['rule_channel']

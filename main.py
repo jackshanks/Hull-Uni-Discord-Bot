@@ -2,6 +2,7 @@ import nextcord
 import os
 
 from Bot.Cogs.Commands.MusicCommands import MusicCommands
+from Bot.Cogs.Managers.RulesManager import RuleManager
 from Config.ConfigLoader import Config
 from nextcord.ext import commands
 from Bot.Cogs.Managers.QuoteManager import QuoteManager
@@ -25,6 +26,9 @@ async def on_ready():
     # bot.add_cog(QuoteManager(bot, db))
     bot.add_cog(BasicCommands(bot, db))
     bot.add_cog(AdminCommands(bot, db))
+    rule_cog = RuleManager(bot, db)
+    await rule_cog.on_run_rules()
+    bot.add_cog(rule_cog)
     music_cog = MusicCommands(bot, db)
     await music_cog.cog_load()
     bot.add_cog(music_cog)
