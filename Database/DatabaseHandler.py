@@ -49,6 +49,20 @@ class DatabaseHandler:
         finally:
             await self._connection.close()
 
+    async def get_default_rules(self):
+        """Get the default rules."""
+        try:
+            await self.connect()
+            async with await self._connection.execute("SELECT rule FROM rules") as cursor:
+                rows = await cursor.fetchall()
+                # Extract the 'rule' value from each Row object
+                return [row['rule'] for row in rows]
+        except Exception as e:
+            print(f"Failed to get default rules: {str(e)}")
+            raise
+        finally:
+            await self.close()
+
     async def get_quote(self):
         """Get a random quote."""
         try:

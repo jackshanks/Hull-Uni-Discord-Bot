@@ -6,5 +6,5 @@ class BaseCog(commands.Cog):
     def __init__(self, bot, db):
         self.bot = bot
         self.db = db
-        config = Config()
-        self.guild_ids = config.guild_ids
+        self.config = Config()
+        self.guild_ids = self.config.guild_ids

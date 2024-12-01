@@ -2,7 +2,7 @@ import urllib
 import urllib.request
 import yaml
 
-CONFIG_URL = "https://raw.githubusercontent.com/jackshanks/Hull-Uni-Discord-Bot/refs/heads/dev/config.yml"
+CONFIG_URL = "https://raw.githubusercontent.com/jackshanks/Hull-Uni-Discord-Bot/refs/heads/dev/Config/config.yml"
 
 
 class Config:
@@ -67,3 +67,7 @@ class Config:
     @property
     def game(self):
         return self.config['game']
+
+    @property
+    def rule_channel(self):
+        return self.config['rule_channel']
