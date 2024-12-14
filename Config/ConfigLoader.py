@@ -2,7 +2,7 @@ import urllib
 import urllib.request
 import yaml
 
-CONFIG_URL = "https://raw.githubusercontent.com/jackshanks/Hull-Uni-Discord-Bot/refs/heads/dev/config.yml"
+CONFIG_URL = "https://raw.githubusercontent.com/jackshanks/Hull-Uni-Discord-Bot/refs/heads/dev/Config/config.yml"
 
 
 class Config:

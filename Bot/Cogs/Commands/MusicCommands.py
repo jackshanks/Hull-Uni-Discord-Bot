@@ -183,3 +183,8 @@ class MusicCommands(BaseCog):
             embed.add_field(name="Album", value=track.album.name)
 
         await player.home.send(embed=embed)
+
+    @commands.Cog.listener()
+    async def on_wavelink_track_end(self, payload: wavelink.TrackEndEventPayload) -> None:
+        print(f"Track ended: {payload.track.title}")
+        print(f"Reason: {payload.reason}")
