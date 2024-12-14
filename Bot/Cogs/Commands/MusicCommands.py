@@ -121,6 +121,8 @@ class MusicCommands(BaseCog):
         else:
             player.autoplay = wavelink.AutoPlayMode.partial
 
+        await ctx.send(str(player.autoplay))
+
     @nextcord.slash_command(name="pause_resume", description="Pause/Resume a song", guild_ids=Config().guild_ids)
     async def pause_resume(self, ctx: Interaction):
         """Pause or Resume the Player depending on its current state."""
