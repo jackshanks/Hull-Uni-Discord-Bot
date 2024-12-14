@@ -6,6 +6,8 @@ from nextcord.ext import commands
 from nextcord import Interaction
 import nextcord
 from typing import cast
+
+from Bot.Cogs.Managers import MusicManager
 from Config.ConfigLoader import Config
 from Bot.Cogs._BaseCog import BaseCog
 
@@ -170,18 +172,7 @@ class MusicCommands(BaseCog):
         original: wavelink.Playable | None = payload.original
         track: wavelink.Playable = payload.track
 
-        embed: nextcord.Embed = nextcord.Embed(title="Now Playing")
-        embed.description = f"**{track.title}** by `{track.author}`"
-
-        if track.artwork:
-            embed.set_image(url=track.artwork)
-
-        if original and original.recommended:
-            embed.description += f"\n\n`This track was recommended via {track.source}`"
-
-        if track.album.name:
-            embed.add_field(name="Album", value=track.album.name)
-
+        embed = await MusicManager.create_track_embed(track, original)
         await player.home.send(embed=embed)
 
     @commands.Cog.listener()
