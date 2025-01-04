@@ -46,9 +46,9 @@ async def on_shutdown():
 
 # Uses environmental variable to get token then displays errors upon bot run
 try:
-    print(os.getenv("auth"))
-    token = os.getenv("auth")
-    bot.run(token)
+    with open('.env', 'r') as f:
+        token = f.read().strip()
+        bot.run(token)
 except nextcord.HTTPException as e:
     if e.status == 429:
         print("The Discord servers denied the connection for making too many requests")
