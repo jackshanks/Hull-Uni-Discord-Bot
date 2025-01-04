@@ -46,7 +46,7 @@ async def on_shutdown():
 
 # Uses environmental variable to get token then displays errors upon bot run
 try:
-    with open('.env', 'r') as f:
+    with open('/AMP/python-app-runner/.env', 'r') as f:
         token = f.read().strip()
         bot.run(token)
 except nextcord.HTTPException as e:
