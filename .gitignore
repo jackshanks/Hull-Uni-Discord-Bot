@@ -65,6 +65,14 @@ db.sqlite3-journal
 instance/
 .webassets-cache
 
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+
 # Scrapy stuff:
 .scrapy
 
