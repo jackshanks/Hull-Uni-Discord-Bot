@@ -10,9 +10,9 @@ import datetime
 class AdminCommands(BaseCog):
     @nextcord.slash_command(name="ban", description="bans", guild_ids=Config().guild_ids)
     @application_checks.has_permissions(administrator=True)
-    async def ban(self, ctx: Interaction):
+    async def ban(self, ctx: Interaction, query: str):
         try:
-            user = await self.bot.fetch_user(int(ctx.message.content))
+            user = await self.bot.fetch_user(int(query))
             await ctx.guild.ban(user)
         except Exception as e:
             print("Error processing command: " + str(e))
