@@ -8,6 +8,16 @@ import datetime
 
 
 class AdminCommands(BaseCog):
+    @nextcord.slash_command(name="ban", description="bans", guild_ids=Config().guild_ids)
+    @application_checks.has_permissions(administrator=True)
+    async def ban(self, ctx: Interaction):
+        try:
+            user = await self.bot.fetch_user(int(ctx.message.content))
+            await ctx.guild.ban(user)
+        except Exception as e:
+            print("Error processing command: " + str(e))
+            await ctx.response.send_message("Error processing command: " + str(e), ephemeral=True)
+
     @nextcord.slash_command(name="reload-config", description="reloads the config", guild_ids=Config().guild_ids)
     @application_checks.has_permissions(administrator=True)
     async def reload_config(self, ctx: Interaction):
@@ -51,7 +61,7 @@ class AdminCommands(BaseCog):
 
     @nextcord.slash_command(name="remove-game", description="Removes a game role", guild_ids=Config().guild_ids)
     @application_checks.has_permissions(administrator=True)
-    async def add_game(self, ctx: Interaction, query: int):
+    async def remove_game(self, ctx: Interaction, query: int):
         try:
             Config().add(query, "game")
             await ctx.response.send_message("201 Removed", ephemeral=True)
