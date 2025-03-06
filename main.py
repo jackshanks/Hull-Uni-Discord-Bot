@@ -1,5 +1,4 @@
 import nextcord
-import os
 
 from Bot.Cogs.Commands.MusicCommands import MusicCommands
 from Bot.Cogs.Managers.RulesManager import RuleManager
@@ -46,8 +45,8 @@ async def on_shutdown():
 
 # Uses environmental variable to get token then displays errors upon bot run
 try:
-    print(os.getenv("auth"))
-    token = os.getenv("auth")
+    f = open(".env", "r", encoding='utf-8-sig')
+    token = f.readline()
     bot.run(token)
 except nextcord.HTTPException as e:
     if e.status == 429:

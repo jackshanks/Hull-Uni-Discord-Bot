@@ -6,6 +6,8 @@ from nextcord.ext import commands
 from nextcord import Interaction
 import nextcord
 from typing import cast
+
+from Bot.Cogs.Managers import MusicManager
 from Config.ConfigLoader import Config
 from Bot.Cogs._BaseCog import BaseCog
 
@@ -55,7 +57,8 @@ class MusicCommands(BaseCog):
                 return
 
         # partial = AutoPlay songs but no recommendations , disabled = No AutoPlay
-        player.autoplay = wavelink.AutoPlayMode.partial
+        if player.autoplay is None or wavelink.AutoPlayMode.enabled:
+            player.autoplay = wavelink.AutoPlayMode.partial
 
         # Lock the player to this channel...
         if not hasattr(player, "home"):
@@ -95,6 +98,30 @@ class MusicCommands(BaseCog):
 
         await ctx.send(f"{player.current.title} skipped by {ctx.user.mention}!")
         await player.skip(force=True)
+
+    @nextcord.slash_command(name="suggested", description="Toggles playing suggested songs", guild_ids=Config().guild_ids)
+    async def suggested(self, ctx: Interaction):
+        """Skip the current song."""
+        player = cast(wavelink.Player, ctx.guild.voice_client)
+
+        if not player:
+            try:
+                wavelink_player = wavelink.Player(self.bot, ctx.user.voice.channel)
+                player = await ctx.user.voice.channel.connect(cls=wavelink_player)
+                await player.set_volume(100)
+            except AttributeError:
+                await ctx.send("Please join a voice channel first before using this command.")
+                return
+            except nextcord.ClientException:
+                await ctx.send("I was unable to join this voice channel. Please try again.")
+                return
+
+        if player.autoplay == wavelink.AutoPlayMode.partial:
+            player.autoplay = wavelink.AutoPlayMode.enabled
+        else:
+            player.autoplay = wavelink.AutoPlayMode.partial
+
+        await ctx.send(str(player.autoplay))
 
     @nextcord.slash_command(name="pause_resume", description="Pause/Resume a song", guild_ids=Config().guild_ids)
     async def pause_resume(self, ctx: Interaction):
@@ -170,16 +197,10 @@ class MusicCommands(BaseCog):
         original: wavelink.Playable | None = payload.original
         track: wavelink.Playable = payload.track
 
-        embed: nextcord.Embed = nextcord.Embed(title="Now Playing")
-        embed.description = f"**{track.title}** by `{track.author}`"
-
-        if track.artwork:
-            embed.set_image(url=track.artwork)
-
-        if original and original.recommended:
-            embed.description += f"\n\n`This track was recommended via {track.source}`"
-
-        if track.album.name:
-            embed.add_field(name="Album", value=track.album.name)
-
+        embed = await MusicManager.create_track_embed(track, original)
         await player.home.send(embed=embed)
+
+    @commands.Cog.listener()
+    async def on_wavelink_track_end(self, payload: wavelink.TrackEndEventPayload) -> None:
+        print(f"Track ended: {payload.track.title}")
+        print(f"Reason: {payload.reason}")

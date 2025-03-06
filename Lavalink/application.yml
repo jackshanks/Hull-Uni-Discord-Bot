@@ -17,7 +17,7 @@ lavalink:
     youtubeSearchEnabled: true
     soundcloudSearchEnabled: true
   plugins:
-    - dependency: "dev.lavalink.youtube:youtube-plugin:1.8.3"
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.11.1"
     - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.3.0"
       snapshot: false
 metrics:
