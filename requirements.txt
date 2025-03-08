@@ -6,3 +6,4 @@ emoji~=2.14.0
 lavalink
 nextcordwavelink
 oracledb
+python-dotenv
