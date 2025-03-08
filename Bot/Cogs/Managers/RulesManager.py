@@ -4,7 +4,6 @@ from Bot.Cogs._BaseCog import BaseCog
 from Config.ConfigLoader import Config
 import json
 import emoji
-import Database.DatabaseHandler
 import re
 
 
@@ -60,10 +59,11 @@ class RuleManager(BaseCog):
             color=nextcord.Color.blue()
         )
 
-        default_rules = await self.db.get_default_rules()
+        default_rules = await self.db.execute("""SELECT rule FROM rules""")
 
         # Add rules to embed with larger text formatting
         for i, rule in enumerate(default_rules, 1):
+            rule = rule[0]
             # Using markdown for larger text and better spacing
             formatted_rule = f"**{rule}**"  # Make rule text bold
             embed.add_field(

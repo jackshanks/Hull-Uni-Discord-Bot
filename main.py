@@ -1,3 +1,5 @@
+import os
+
 import nextcord
 
 from Bot.Cogs.Commands.MusicCommands import MusicCommands
@@ -9,13 +11,13 @@ from Bot.Cogs.Commands.QuoteCommands import QuoteCommands
 from Bot.Cogs.Commands.RoleCommands import RoleCommands
 from Bot.Cogs.Commands.BasicCommands import BasicCommands
 from Bot.Cogs.Commands.AdminCommands import AdminCommands
-from Database import DatabaseHandler
+from Bot.Cogs.Managers.DatabaseManager import DatabaseManager
 
 Config()
 
 intents = nextcord.Intents.all()
 bot = commands.Bot(intents=intents)
-db = DatabaseHandler.DatabaseHandler()
+db = DatabaseManager()
 
 
 @bot.event
@@ -45,8 +47,7 @@ async def on_shutdown():
 
 # Uses environmental variable to get token then displays errors upon bot run
 try:
-    f = open(".env", "r", encoding='utf-8-sig')
-    token = f.readline()
+    token = os.getenv("auth")
     bot.run(token)
 except nextcord.HTTPException as e:
     if e.status == 429:
