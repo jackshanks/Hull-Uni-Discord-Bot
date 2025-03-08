@@ -1,5 +1,5 @@
 import os
-
+from dotenv import load_dotenv
 import nextcord
 
 from Bot.Cogs.Commands.MusicCommands import MusicCommands
@@ -46,6 +46,7 @@ async def on_shutdown():
 
 
 # Uses environmental variable to get token then displays errors upon bot run
+load_dotenv()
 try:
     token = os.getenv("auth")
     bot.run(token)
