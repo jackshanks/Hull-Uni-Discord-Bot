@@ -18,7 +18,7 @@ class DatabaseManager:
         """Initialize the database connection."""
         self._connection = (await oracledb.connect_async
                             (user="admin",
-                             password="1ytt2mmywhcala1w2y,2HM",
+                             password="1",
                              dsn=self.dns))
 
     async def close(self):
