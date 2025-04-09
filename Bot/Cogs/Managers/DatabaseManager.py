@@ -17,10 +17,12 @@ class DatabaseManager:
     async def connect(self) -> None:
         """Initialize the database connection."""
         token = os.getenv("db")
-        self._connection = (await oracledb.connect_async
-                            (user="admin",
-                             password=token,
-                             dsn=self.dns))
+        print(token)
+
+        try:
+            self._connection = (await oracledb.connect_async(user="admin",password=token,dsn=self.dns))
+        except Exception as e:
+            raise e
 
     async def close(self):
         """Close the database connection."""
