@@ -9,9 +9,10 @@ from Config.ConfigLoader import Config
 class RoleCommands(BaseCog):
     ROLE_CHANNEL_ID = 1359604047803449454
 
-    def __init__(self, bot):
-        super().__init__(bot)
+    def __init__(self, bot, db):
+        super().__init__(bot, db)
         self.persistent_view_added = False
+        self.db = db
 
     @commands.Cog.listener()
     async def on_ready(self):
