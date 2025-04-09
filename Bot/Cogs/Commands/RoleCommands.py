@@ -1,30 +1,40 @@
 from nextcord.ext import commands
 from nextcord import Interaction
 import nextcord
-from Bot.Cogs.Managers.DropdownManager import DropdownView
+from Bot.Cogs.Managers.DropdownManager import PersistentRoleView
 from Bot.Cogs._BaseCog import BaseCog
 from Config.ConfigLoader import Config
 
 
 class RoleCommands(BaseCog):
-    @nextcord.slash_command(name="colour-picker", description="Pick yourself a colour", guild_ids=Config().guild_ids)
-    async def assign_colour(self, interaction: Interaction):
-        await interaction.response.send_message("Select a new colour", view=DropdownView(interaction, role_type="colour"),ephemeral=True)
+    ROLE_CHANNEL_ID = 1359604047803449454
 
-    @nextcord.slash_command(name="clear-colour", description="Go back to your default colour",guild_ids=Config().guild_ids)
-    async def remove_all_colour(self, interaction: Interaction):
-        for i in interaction.user.roles:
-            if i.id in Config().colour:
-                await interaction.user.remove_roles(i)
-        await interaction.send(":+1: Your colour has been reset", ephemeral=True)
+    def __init__(self, bot):
+        super().__init__(bot)
+        self.persistent_view_added = False
 
-    @nextcord.slash_command(name="game-picker", description="Pick your favourite games!", guild_ids=Config().guild_ids)
-    async def assign_game(self, interaction: Interaction):
-        await interaction.response.send_message("Select new game(s)", view=DropdownView(interaction, role_type="game"), ephemeral=True)
+    @commands.Cog.listener()
+    async def on_ready(self):
+        self.bot.add_view(PersistentRoleView())
 
-    @nextcord.slash_command(name="clear-games", description="Remove all your game roles!", guild_ids=Config().guild_ids)
-    async def remove_games(self, interaction: Interaction):
-        for i in interaction.user.roles:
-            if i.id in Config().game:
-                await interaction.user.remove_roles(i)
-        await interaction.send(":+1: Your games have been reset", ephemeral=True)
+        if not self.persistent_view_added:
+            channel = self.bot.get_channel(self.ROLE_CHANNEL_ID)
+            if channel:
+                await channel.purge(limit=5)
+
+                await channel.send("**Role Selection**\nChoose your colour and game roles below:", view=PersistentRoleView())
+                self.persistent_view_added = True
+                print(f"Persistent role view added to channel {self.ROLE_CHANNEL_ID}")
+            else:
+                print(f"Could not find channel with ID {self.ROLE_CHANNEL_ID}")
+
+    @nextcord.slash_command(name="refresh-role-menu", description="Refresh the role selection menu", guild_ids=Config().guild_ids)
+    @commands.has_permissions(administrator=True)
+    async def refresh_role_menu(self, interaction: Interaction):
+        channel = self.bot.get_channel(self.ROLE_CHANNEL_ID)
+        if channel:
+            await channel.purge(limit=5)
+            await channel.send("**Role Selection**\nChoose your colour and game roles below:", view=PersistentRoleView())
+            await interaction.response.send_message("Role menu refreshed!", ephemeral=True)
+        else:
+            await interaction.response.send_message(f"Could not find channel with ID {self.ROLE_CHANNEL_ID}", ephemeral=True)
