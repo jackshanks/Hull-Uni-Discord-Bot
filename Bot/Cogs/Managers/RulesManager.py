@@ -7,7 +7,7 @@ class RuleManager(BaseCog):
     def __init__(self, bot, db):
         super().__init__(bot, db)
         self.rule_file = "rules.json"
-        self.channel_id = self.config.rule_channel
+        self.channel_id = "1202727078017900635"
         self.channel = None
 
     async def on_run_rules(self):
@@ -68,7 +68,6 @@ class RuleManager(BaseCog):
                 inline=False
             )
 
-        embed.set_footer(text="Last updated")
         # Make embed thicker by adding empty field if needed
         if len(default_rules) % 2 == 0:
             embed.add_field(name="\u200b", value="\u200b", inline=False)
