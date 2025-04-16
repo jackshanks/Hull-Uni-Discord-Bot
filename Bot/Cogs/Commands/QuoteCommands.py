@@ -1,5 +1,3 @@
-from datetime import datetime
-from nextcord.ext import commands
 from nextcord import Interaction
 import nextcord
 from Bot.Cogs._BaseCog import BaseCog

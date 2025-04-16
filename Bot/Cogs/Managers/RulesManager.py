@@ -1,10 +1,6 @@
-﻿from nextcord.ext import commands
-import nextcord
+﻿import nextcord
 from Bot.Cogs._BaseCog import BaseCog
-from Config.ConfigLoader import Config
 import json
-import emoji
-import re
 
 
 class RuleManager(BaseCog):

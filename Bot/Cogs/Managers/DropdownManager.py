@@ -1,6 +1,5 @@
 ﻿import nextcord
 from nextcord import Interaction
-from Config.ConfigLoader import Config
 
 
 class PersistentRoleView(nextcord.ui.View):

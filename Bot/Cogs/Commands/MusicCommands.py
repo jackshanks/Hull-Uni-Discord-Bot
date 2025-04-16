@@ -1,12 +1,8 @@
-﻿import asyncio
-
-import emoji
-import nextcordwavelink as wavelink
+﻿import nextcordwavelink as wavelink
 from nextcord.ext import commands
 from nextcord import Interaction
 import nextcord
 from typing import cast
-
 from Bot.Cogs.Managers import MusicManager
 from Config.ConfigLoader import Config
 from Bot.Cogs._BaseCog import BaseCog

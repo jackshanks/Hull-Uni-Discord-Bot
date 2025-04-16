@@ -1,7 +1,5 @@
 ﻿import os
-import aiosqlite
 import oracledb
-from oracledb import Cursor
 
 
 class DatabaseManager:

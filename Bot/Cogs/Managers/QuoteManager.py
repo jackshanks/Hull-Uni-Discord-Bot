@@ -1,14 +1,8 @@
-from aiohttp.hdrs import AUTHORIZATION
 from nextcord.ext import commands
 import nextcord
-from oracledb.base_impl import Description
-
-from Bot.Cogs.Managers.DropdownManager import ColourDropdown
 from Bot.Cogs._BaseCog import BaseCog
 from Config.ConfigLoader import Config
-import json
 import emoji
-import re
 
 
 class QuoteManager(BaseCog):
