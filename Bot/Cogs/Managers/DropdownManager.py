@@ -4,21 +4,27 @@ from Config.ConfigLoader import Config
 
 
 class PersistentRoleView(nextcord.ui.View):
-    def __init__(self):
+    def __init__(self, db):
         super().__init__(timeout=None)  # Set timeout to None for persistent view
-        self.add_item(ColourDropdown())
-        self.add_item(GameDropdown())
+        self.db = db
+        self.add_item(ColourDropdown(db))
+        self.add_item(GameDropdown(db))
 
 
 class ColourDropdown(nextcord.ui.Select):
-    def __init__(self):
+    def __init__(self, db):
+        self.db = db
         select_options = []
-        for i in Config().colour:
+
+        colour_roles = self.db.execute("SELECT id, name FROM roles WHERE type = 'colour'").fetchall()
+        for role_id, role_name in colour_roles:
             try:
-                select_options.append(nextcord.SelectOption(label=f"Colour {i}", value=str(i)))
+                select_options.append(nextcord.SelectOption(
+                    label=role_name,
+                    value=str(role_id)
+                ))
             except Exception as e:
                 print(f"Error occurred while setting up colour dropdown menu! {e}")
-
         super().__init__(
             placeholder="Select a colour",
             min_values=1,
@@ -28,26 +34,31 @@ class ColourDropdown(nextcord.ui.Select):
         )
 
     async def callback(self, interaction: Interaction) -> None:
-        for i in interaction.user.roles:
-            if i.id in Config().colour:
-                await interaction.user.remove_roles(i)
+        colour_role_ids = [row[0] for row in self.db.execute(
+            "SELECT id FROM roles WHERE type = 'colour'").fetchall()]
+
+        for role in interaction.user.roles:
+            if role.id in colour_role_ids:
+                await interaction.user.remove_roles(role)
 
         role_id = int(self.values[0])
         role = interaction.guild.get_role(role_id)
         await interaction.user.add_roles(role)
         await interaction.response.send_message(f"You've been given the {role.name} colour!", ephemeral=True)
 
-
 class GameDropdown(nextcord.ui.Select):
-    def __init__(self):
+    def __init__(self, db):
+        self.db = db
         select_options = []
-        for i in Config().game:
+
+        game_roles = self.db.execute("SELECT id, name FROM roles WHERE type = 'game'").fetchall()
+
+        for role_id, role_name in game_roles:
             try:
-                # We can't access the guild here, so we'll get the role in the callback
                 select_options.append(nextcord.SelectOption(
-                    label=f"Game {i}",
-                    value=str(i),
-                    description=f"Access to game channel"
+                    label=role_name,
+                    value=str(role_id),
+                    description=f"Access to {role_name} channel"
                 ))
             except Exception as e:
                 print(f"Error occurred while setting up game dropdown menu! {e}")

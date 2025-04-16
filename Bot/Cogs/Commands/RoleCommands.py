@@ -16,14 +16,14 @@ class RoleCommands(BaseCog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        self.bot.add_view(PersistentRoleView())
+        self.bot.add_view(PersistentRoleView(self.db))
 
         if not self.persistent_view_added:
             channel = self.bot.get_channel(self.ROLE_CHANNEL_ID)
             if channel:
                 await channel.purge(limit=5)
 
-                await channel.send("**Role Selection**\nChoose your colour and game roles below:", view=PersistentRoleView())
+                await channel.send("**Role Selection**\nChoose your colour and game roles below:", view=PersistentRoleView(self.db))
                 self.persistent_view_added = True
                 print(f"Persistent role view added to channel {self.ROLE_CHANNEL_ID}")
             else:
@@ -35,7 +35,7 @@ class RoleCommands(BaseCog):
         channel = self.bot.get_channel(self.ROLE_CHANNEL_ID)
         if channel:
             await channel.purge(limit=5)
-            await channel.send("**Role Selection**\nChoose your colour and game roles below:", view=PersistentRoleView())
+            await channel.send("**Role Selection**\nChoose your colour and game roles below:", view=PersistentRoleView(self.db))
             await interaction.response.send_message("Role menu refreshed!", ephemeral=True)
         else:
             await interaction.response.send_message(f"Could not find channel with ID {self.ROLE_CHANNEL_ID}", ephemeral=True)
