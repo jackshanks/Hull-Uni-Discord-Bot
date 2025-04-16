@@ -7,7 +7,7 @@ class RuleManager(BaseCog):
     def __init__(self, bot, db):
         super().__init__(bot, db)
         self.rule_file = "rules.json"
-        self.channel_id = "1202727078017900635"
+        self.channel_id = 1202727078017900635
         self.channel = None
 
     async def on_run_rules(self):
