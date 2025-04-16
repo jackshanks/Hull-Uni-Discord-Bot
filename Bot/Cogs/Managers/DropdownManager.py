@@ -16,7 +16,7 @@ class ColourDropdown(nextcord.ui.Select):
         self.db = db
         select_options = []
 
-        colour_roles = self.db.execute("SELECT id, name FROM roles WHERE type = 'colour'").fetchall()
+        colour_roles = self.db.execute("SELECT id, name FROM roles WHERE type = 'colour'")
         for role_id, role_name in colour_roles:
             try:
                 select_options.append(nextcord.SelectOption(
@@ -35,7 +35,7 @@ class ColourDropdown(nextcord.ui.Select):
 
     async def callback(self, interaction: Interaction) -> None:
         colour_role_ids = [row[0] for row in self.db.execute(
-            "SELECT id FROM roles WHERE type = 'colour'").fetchall()]
+            "SELECT id FROM roles WHERE type = 'colour'")]
 
         for role in interaction.user.roles:
             if role.id in colour_role_ids:
@@ -51,7 +51,7 @@ class GameDropdown(nextcord.ui.Select):
         self.db = db
         select_options = []
 
-        game_roles = self.db.execute("SELECT id, name FROM roles WHERE type = 'game'").fetchall()
+        game_roles = self.db.execute("SELECT id, name FROM roles WHERE type = 'game'")
 
         for role_id, role_name in game_roles:
             try:
