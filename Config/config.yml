@@ -26,7 +26,7 @@ quote_channels:
 guild_ids:                         
   - 554737777049206794  # Test Server
   - 1153315295306465381 # Hull Uni
-rule_channel: 1190395228792815777
+rule_channel: 1202727078017900635
 welcome_role: 1211131520786636820
 star_quote_channel: 554737777049206796
 delete_channel: 554737777049206796
