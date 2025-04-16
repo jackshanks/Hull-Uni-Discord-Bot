@@ -17,7 +17,6 @@ class DatabaseManager:
     async def connect(self) -> None:
         """Initialize the database connection."""
         token = os.getenv("db")
-        print(token)
 
         try:
             self._connection = (await oracledb.connect_async(user="admin",password=token,dsn=self.dns))

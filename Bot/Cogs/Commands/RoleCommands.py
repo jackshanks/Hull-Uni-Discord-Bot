@@ -32,7 +32,5 @@ class RoleCommands(BaseCog):
                 await channel.send("**Role Selection**\nChoose your colour and game roles below:", view=message_view)
                 self.persistent_view_added = True
                 await interaction.response.send_message("Role menu refreshed successfully!", ephemeral=True)
-                print(f"Persistent role view added to channel {self.ROLE_CHANNEL_ID}")
             else:
                 await interaction.response.send_message(f"Could not find channel with ID {self.ROLE_CHANNEL_ID}", ephemeral=True)
-                print(f"Could not find channel with ID {self.ROLE_CHANNEL_ID}")

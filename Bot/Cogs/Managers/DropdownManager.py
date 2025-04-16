@@ -65,8 +65,8 @@ class GameDropdown(nextcord.ui.Select):
         self.db = db
         super().__init__(
             placeholder="Select a game",
-            min_values=1,
-            max_values=1,
+            min_values=0,
+            max_values=0,
             options=[],
             custom_id="game_dropdown"
         )
