@@ -2,7 +2,7 @@
 from nextcord import Interaction
 
 
-class PersistentRoleView(nextcord.ui.View):
+class ColourRoleView(nextcord.ui.View):
     def __init__(self, db):
         super().__init__(timeout=None)  # Set timeout to None for persistent view
         self.db = db
@@ -19,12 +19,19 @@ class PersistentRoleView(nextcord.ui.View):
         except Exception as e:
             print(f"Failed to load colour roles from database: {e}")
 
+
+class GameRoleView(nextcord.ui.View):
+    def __init__(self, db):
+        super().__init__(timeout=None)  # Set timeout to None for persistent view
+        self.db = db
+
+    async def setup_items(self):
         # Add game buttons
         try:
             game_roles = await self.db.execute("SELECT id, name FROM roles WHERE type = 'game'")
             for role_id, role_name in game_roles:
                 try:
-                    self.add_item(GameButton(role_id, role_name))
+                    self.add_item(GameButton(self.db, role_id, role_name))
                 except Exception as e:
                     print(f"Error adding button for game role {role_name}: {e}")
         except Exception as e:
@@ -59,7 +66,8 @@ class ColourButton(nextcord.ui.Button):
 
 
 class GameButton(nextcord.ui.Button):
-    def __init__(self, role_id, role_name):
+    def __init__(self, db, role_id, role_name):
+        self.db = db
         self.role_id = role_id
         # Use secondary style (gray) for game buttons
         super().__init__(
@@ -77,3 +85,5 @@ class GameButton(nextcord.ui.Button):
         else:
             await interaction.user.add_roles(role)
             await interaction.response.send_message(f"You've been given the {role.name} role!", ephemeral=True)
+
+

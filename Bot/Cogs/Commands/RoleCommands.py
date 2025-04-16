@@ -1,7 +1,7 @@
 from nextcord.ext import commands
 from nextcord import Interaction
 import nextcord
-from Bot.Cogs.Managers.DropdownManager import PersistentRoleView
+from Bot.Cogs.Managers.DropdownManager import ColourRoleView, GameRoleView
 from Bot.Cogs._BaseCog import BaseCog
 from Config.ConfigLoader import Config
 
@@ -17,28 +17,47 @@ class RoleCommands(BaseCog):
     @nextcord.slash_command(name="refresh-role-menu", description="Refresh the role selection menu", guild_ids=Config().guild_ids)
     @commands.has_permissions(administrator=True)
     async def refresh_role_menu(self, interaction: Interaction):
-        view = PersistentRoleView(self.db)
-        await view.setup_items()
-        self.bot.add_view(view)
+        # Register views with the bot
+        colour_view = ColourRoleView(self.db)
+        await colour_view.setup_items()
+        self.bot.add_view(colour_view)
 
-        if not self.persistent_view_added:
-            channel = self.bot.get_channel(self.ROLE_CHANNEL_ID)
-            if channel:
-                await channel.purge(limit=5)
+        game_view = GameRoleView(self.db)
+        await game_view.setup_items()
+        self.bot.add_view(game_view)
 
-                message_view = PersistentRoleView(self.db)
-                await message_view.setup_items()
+        # Send the messages if they haven't been sent yet or need refreshing
+        channel = self.bot.get_channel(self.ROLE_CHANNEL_ID)
+        if channel:
+            await channel.purge(limit=5)  # Clear previous messages
 
-                embed = nextcord.Embed(
-                    title="Role Selection",
-                    description="**Colors:** Click a color button to set your name color (you can have only one color at a time)\n\n**Games:** Click game buttons to join or leave specific game channels",
-                    color=nextcord.Color.blurple()
-                )
+            # Create and send colour role message
+            colour_message_view = ColourRoleView(self.db)
+            await colour_message_view.setup_items()
 
-                await channel.send(embed=embed, view=message_view)
-                self.persistent_view_added = True
-                await interaction.response.send_message("Role menu refreshed successfully!", ephemeral=True)
-                print(f"Persistent role view added to channel {self.ROLE_CHANNEL_ID}")
-            else:
-                await interaction.response.send_message(f"Could not find channel with ID {self.ROLE_CHANNEL_ID}", ephemeral=True)
-                print(f"Could not find channel with ID {self.ROLE_CHANNEL_ID}")
+            colour_embed = nextcord.Embed(
+                title="Color Selection",
+                description="**Choose your name color**\n\nClick a color button to set your name color. You can have only one color at a time.",
+                color=nextcord.Color.blue()
+            )
+
+            await channel.send(embed=colour_embed, view=colour_message_view)
+
+            # Create and send game role message
+            game_message_view = GameRoleView(self.db)
+            await game_message_view.setup_items()
+
+            game_embed = nextcord.Embed(
+                title="Game Selection",
+                description="**Join game channels**\n\nClick game buttons to join or leave specific game channels. You can join multiple game channels.",
+                color=nextcord.Color.green()
+            )
+
+            await channel.send(embed=game_embed, view=game_message_view)
+
+            self.persistent_views_added = True
+            await interaction.response.send_message("Role menus refreshed successfully!", ephemeral=True)
+            print(f"Persistent role views added to channel {self.ROLE_CHANNEL_ID}")
+        else:
+            await interaction.response.send_message(f"Could not find channel with ID {self.ROLE_CHANNEL_ID}", ephemeral=True)
+            print(f"Could not find channel with ID {self.ROLE_CHANNEL_ID}")
