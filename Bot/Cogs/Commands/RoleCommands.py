@@ -17,7 +17,6 @@ class RoleCommands(BaseCog):
     @nextcord.slash_command(name="refresh-role-menu", description="Refresh the role selection menu", guild_ids=Config().guild_ids)
     @commands.has_permissions(administrator=True)
     async def refresh_role_menu(self, interaction: Interaction):
-        # Register views with the bot
         colour_view = ColourRoleView(self.db)
         await colour_view.setup_items()
         self.bot.add_view(colour_view)
@@ -26,12 +25,10 @@ class RoleCommands(BaseCog):
         await game_view.setup_items()
         self.bot.add_view(game_view)
 
-        # Send the messages if they haven't been sent yet or need refreshing
         channel = self.bot.get_channel(self.ROLE_CHANNEL_ID)
         if channel:
             await channel.purge(limit=5)  # Clear previous messages
 
-            # Create and send colour role message
             colour_message_view = ColourRoleView(self.db)
             await colour_message_view.setup_items()
 

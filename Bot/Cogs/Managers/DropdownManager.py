@@ -4,7 +4,7 @@ from nextcord import Interaction
 
 class ColourRoleView(nextcord.ui.View):
     def __init__(self, db):
-        super().__init__(timeout=None)  # Set timeout to None for persistent view
+        super().__init__(timeout=None)
         self.db = db
 
     async def setup_items(self):
@@ -22,7 +22,7 @@ class ColourRoleView(nextcord.ui.View):
 
 class GameRoleView(nextcord.ui.View):
     def __init__(self, db):
-        super().__init__(timeout=None)  # Set timeout to None for persistent view
+        super().__init__(timeout=None)
         self.db = db
 
     async def setup_items(self):
@@ -42,19 +42,16 @@ class ColourButton(nextcord.ui.Button):
     def __init__(self, db, role_id, role_name):
         self.db = db
         self.role_id = role_id
-        # Use primary style (blue) for color buttons to differentiate them
         super().__init__(
-            style=nextcord.ButtonStyle.primary,
+            style=nextcord.ButtonStyle.secondary,
             label=role_name,
             custom_id=f"colour_button_{role_id}"
         )
 
     async def callback(self, interaction: Interaction):
-        # Get all color role IDs
         result = await self.db.execute("SELECT id FROM roles WHERE type = 'colour'")
         colour_role_ids = [row[0] for row in result]
 
-        # Remove any existing color roles
         for role in interaction.user.roles:
             if role.id in colour_role_ids:
                 await interaction.user.remove_roles(role)
@@ -69,7 +66,6 @@ class GameButton(nextcord.ui.Button):
     def __init__(self, db, role_id, role_name):
         self.db = db
         self.role_id = role_id
-        # Use secondary style (gray) for game buttons
         super().__init__(
             style=nextcord.ButtonStyle.secondary,
             label=role_name,
