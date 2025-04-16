@@ -29,8 +29,16 @@ class RoleCommands(BaseCog):
                 message_view = PersistentRoleView(self.db)
                 await message_view.setup_items()
 
-                await channel.send("**Role Selection**\nChoose your colour and game roles below:", view=message_view)
+                embed = nextcord.Embed(
+                    title="Role Selection",
+                    description="**Colors:** Click a color button to set your name color (you can have only one color at a time)\n\n**Games:** Click game buttons to join or leave specific game channels",
+                    color=nextcord.Color.blurple()
+                )
+
+                await channel.send(embed=embed, view=message_view)
                 self.persistent_view_added = True
                 await interaction.response.send_message("Role menu refreshed successfully!", ephemeral=True)
+                print(f"Persistent role view added to channel {self.ROLE_CHANNEL_ID}")
             else:
                 await interaction.response.send_message(f"Could not find channel with ID {self.ROLE_CHANNEL_ID}", ephemeral=True)
+                print(f"Could not find channel with ID {self.ROLE_CHANNEL_ID}")

@@ -9,92 +9,69 @@ class PersistentRoleView(nextcord.ui.View):
         self.db = db
 
     async def setup_items(self):
-        colour_dropdown = ColourDropdown(self.db)
-        await colour_dropdown.setup_options()
-        self.add_item(colour_dropdown)
-
-        game_dropdown = GameDropdown(self.db)
-        await game_dropdown.setup_options()
-        self.add_item(game_dropdown)
-
-
-class ColourDropdown(nextcord.ui.Select):
-    def __init__(self, db):
-        self.db = db
-        super().__init__(
-            placeholder="Select a colour",
-            min_values=1,
-            max_values=1,
-            options=[],
-            custom_id="colour_dropdown"
-        )
-
-    async def setup_options(self):
-        select_options = []
+        # Add color buttons
         try:
             colour_roles = await self.db.execute("SELECT id, name FROM roles WHERE type = 'colour'")
             for role_id, role_name in colour_roles:
                 try:
-                    select_options.append(nextcord.SelectOption(
-                        label=role_name,
-                        value=str(role_id)
-                    ))
+                    self.add_item(ColourButton(self.db, role_id, role_name))
                 except Exception as e:
-                    print(f"Error occurred while setting up colour dropdown menu! {e}")
-
-            self.options = select_options
+                    print(f"Error adding button for colour role {role_name}: {e}")
         except Exception as e:
             print(f"Failed to load colour roles from database: {e}")
 
-    async def callback(self, interaction: Interaction) -> None:
-        result = await self.db.execute("SELECT id FROM roles WHERE type = 'colour'")
-        colour_role_ids = [row[0] for row in result]
-
-        for role in interaction.user.roles:
-            if role.id in colour_role_ids:
-                await interaction.user.remove_roles(role)
-
-        role_id = int(self.values[0])
-        role = interaction.guild.get_role(role_id)
-        await interaction.user.add_roles(role)
-        await interaction.response.send_message(f"You've been given the {role.name} colour!", ephemeral=True)
-
-
-class GameDropdown(nextcord.ui.Select):
-    def __init__(self, db):
-        self.db = db
-        super().__init__(
-            placeholder="Select a game",
-            min_values=0,
-            max_values=0,
-            options=[],
-            custom_id="game_dropdown"
-        )
-
-    async def setup_options(self):
-        select_options = []
+        # Add game buttons
         try:
             game_roles = await self.db.execute("SELECT id, name FROM roles WHERE type = 'game'")
             for role_id, role_name in game_roles:
                 try:
-                    select_options.append(nextcord.SelectOption(
-                        label=role_name,
-                        value=str(role_id),
-                        description=f"Access to {role_name} channel"
-                    ))
+                    self.add_item(GameButton(role_id, role_name))
                 except Exception as e:
-                    print(f"Error occurred while setting up game dropdown menu! {e}")
-                    continue
-
-            self.options = select_options
+                    print(f"Error adding button for game role {role_name}: {e}")
         except Exception as e:
             print(f"Failed to load game roles from database: {e}")
 
-    async def callback(self, interaction: Interaction) -> None:
-        role_id = int(self.values[0])
-        role = interaction.guild.get_role(role_id)
 
-        # Toggle this specific role
+class ColourButton(nextcord.ui.Button):
+    def __init__(self, db, role_id, role_name):
+        self.db = db
+        self.role_id = role_id
+        # Use primary style (blue) for color buttons to differentiate them
+        super().__init__(
+            style=nextcord.ButtonStyle.primary,
+            label=role_name,
+            custom_id=f"colour_button_{role_id}"
+        )
+
+    async def callback(self, interaction: Interaction):
+        # Get all color role IDs
+        result = await self.db.execute("SELECT id FROM roles WHERE type = 'colour'")
+        colour_role_ids = [row[0] for row in result]
+
+        # Remove any existing color roles
+        for role in interaction.user.roles:
+            if role.id in colour_role_ids:
+                await interaction.user.remove_roles(role)
+
+        # Add the selected color role
+        role = interaction.guild.get_role(self.role_id)
+        await interaction.user.add_roles(role)
+        await interaction.response.send_message(f"You've been given the {role.name} colour!", ephemeral=True)
+
+
+class GameButton(nextcord.ui.Button):
+    def __init__(self, role_id, role_name):
+        self.role_id = role_id
+        # Use secondary style (gray) for game buttons
+        super().__init__(
+            style=nextcord.ButtonStyle.secondary,
+            label=role_name,
+            custom_id=f"game_button_{role_id}"
+        )
+
+    async def callback(self, interaction: Interaction):
+        role = interaction.guild.get_role(self.role_id)
+
         if role in interaction.user.roles:
             await interaction.user.remove_roles(role)
             await interaction.response.send_message(f"Removed the {role.name} role!", ephemeral=True)
