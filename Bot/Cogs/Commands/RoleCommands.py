@@ -17,15 +17,22 @@ class RoleCommands(BaseCog):
     @nextcord.slash_command(name="refresh-role-menu", description="Refresh the role selection menu", guild_ids=Config().guild_ids)
     @commands.has_permissions(administrator=True)
     async def refresh_role_menu(self, interaction: Interaction):
-        self.bot.add_view(PersistentRoleView(self.db))
+        view = PersistentRoleView(self.db)
+        await view.setup_items()
+        self.bot.add_view(view)
 
         if not self.persistent_view_added:
             channel = self.bot.get_channel(self.ROLE_CHANNEL_ID)
             if channel:
                 await channel.purge(limit=5)
 
-                await channel.send("**Role Selection**\nChoose your colour and game roles below:", view=PersistentRoleView(self.db))
+                message_view = PersistentRoleView(self.db)
+                await message_view.setup_items()
+
+                await channel.send("**Role Selection**\nChoose your colour and game roles below:", view=message_view)
                 self.persistent_view_added = True
+                await interaction.response.send_message("Role menu refreshed successfully!", ephemeral=True)
                 print(f"Persistent role view added to channel {self.ROLE_CHANNEL_ID}")
             else:
+                await interaction.response.send_message(f"Could not find channel with ID {self.ROLE_CHANNEL_ID}", ephemeral=True)
                 print(f"Could not find channel with ID {self.ROLE_CHANNEL_ID}")
